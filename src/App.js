@@ -1,24 +1,99 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useEffect, useState} from 'react'
+import firebase from "firebase/app";
+import "firebase/database";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Home from './pages/home/home';
+import About from './pages/about/about'
+import Delivery from './pages/delivery/delivery';
+import Dashboard from './pages/dashboard/dashboard';
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBRKL2yLsocLgIN22WzeZpnDhAZuugxFi8",
+  authDomain: "digital-menu-4310d.firebaseapp.com",
+  databaseURL: "https://digital-menu-4310d-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "digital-menu-4310d",
+  storageBucket: "digital-menu-4310d.appspot.com",
+  messagingSenderId: "531678763244",
+  appId: "1:531678763244:web:cf6866ceecc1fb5f59edc9"
+};
+
+firebase.initializeApp(firebaseConfig);
+
 
 function App() {
+
+const [count, setCount] = useState(0)
+
+useEffect(()=>{
+  let staters = [
+    {
+      name:'dish1',
+      cost:'xx.xx'
+    },
+    {
+      name:'dish2',
+      cost:'xx.xx'
+    }
+  ]
+
+  let x = {
+    starters:staters
+  }
+  // firebase.database().ref('menu/').set(x)
+
+  firebase.database().ref('menu/').once('value', (snapshot)=>{
+    let databaseVal = snapshot.val();
+    console.log('databaseVal',databaseVal)
+  })
+},[])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+<Router>
+<div>
+  {/* <nav>
+    <ul>
+      <li>
+        <Link to="/">Home</Link>
+      </li>
+      <li>
+        <Link to="/about">About</Link>
+      </li>
+      <li>
+        <Link to="/delivery">delivery</Link>
+      </li>
+    </ul>
+  </nav> */}
+
+  {/* A <Switch> looks through its children <Route>s and
+      renders the first one that matches the current URL. */}
+  <Switch>
+
+    <Route path="/about">
+      <About />
+    </Route>
+
+    <Route path="/dashboard">
+      <Dashboard />
+    </Route>
+
+    <Route path="/delivery">
+      <Delivery />
+    </Route>
+
+    <Route path="/">
+      <Home />
+    </Route>
+
+  </Switch>
+</div>
+</Router>
   );
 }
 
