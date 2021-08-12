@@ -6,7 +6,8 @@ const Menu = () => {
 
     const [menulist, setMenulist] = useState([])
     const [myOrders, setMyOrders] = useState([])
-const[isModalVisible, setIsModalVisible] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+
     useEffect(() => {
         firebase.database().ref('menu/').on('value', (snapshot) => {
             let databaseVal = snapshot.val();
@@ -49,9 +50,10 @@ const[isModalVisible, setIsModalVisible] = useState(false)
         setMyOrders(temp)
     }
 
+
     return (
         <div style={{ padding: 15 }}>
-            <button onClick={()=>setIsModalVisible(true)}>View my cart</button>
+            <button onClick={() => setIsModalVisible(true)}>View my cart</button>
 
             <h1>Menu list</h1>
             {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
@@ -78,13 +80,14 @@ const[isModalVisible, setIsModalVisible] = useState(false)
                 )
             })}
 
-<div style={{display:isModalVisible ? 'block' : 'none', width:'100vw', height: '100vh', backgroundColor:'rgba(0,0,0,.9)', position:'absolute', top:0}}>
-<div style={{display:'flex', justifyContent:'center'}}>
+            <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
 
-<button onClick={()=>setIsModalVisible(false)}>Close</button>
-{/* add your code here */}
-</div>
-</div>
+                    <button onClick={() => setIsModalVisible(false)}>Close</button>
+                     
+                </div>
+            </div>
+
         </div>
     )
 
