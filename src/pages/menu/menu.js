@@ -5,8 +5,12 @@ import "firebase/database";
 const Menu = () => {
 
     const [menulist, setMenulist] = useState([])
-    const [myOrders, setMyOrders] = useState([])
+    const [myOrders, setMyOrders] = useState({})
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isHome, setIsHome] = useState(false)
+    const [name, setName] = useState('')
+    const [address, setAddress] = useState('')
+    const [number, setNumber] = useState('')
 
     useEffect(() => {
         firebase.database().ref('menu/').on('value', (snapshot) => {
@@ -21,7 +25,6 @@ const Menu = () => {
                     obj.id = temp[i]
                     x.push(obj)
                 }
-                console.log('databaseVal', x)
 
                 for (let i = 0; i < x.length; i++) {
                     let dishType = x[i].dishType //non-veg [0]
@@ -36,19 +39,80 @@ const Menu = () => {
                         xObj[dishType][menuType].push(x[i])
                     }
                 }
-                console.log('dishType', xObj)
 
                 setMenulist(xObj)
             }
         })
+
+        console.log('dishType', window)
+        if(window.location.search.includes('q=home')){
+            setIsHome(true)
+        }
+
     }, [])
 
     const handelAdd = (data, myOrders) => {
-        let temp = [...myOrders]
-        temp.push(data)
-        console.log('myOrders', temp)
+        let temp = {...myOrders}
+        temp[data.id] = data
+        
+        if(temp[data.id].count === undefined){
+            temp[data.id].count = 1
+        }
+        else{
+            temp[data.id].count = temp[data.id].count + 1
+        }
+        console.log('temp',temp)
         setMyOrders(temp)
     }
+
+    const objectToArray=(obj)=>{
+        let x = Object.keys(obj)
+        let tempArr = []
+        for(let i=0; i<x.length; i++){
+            tempArr.push(obj[ x[i] ])
+        }
+        return tempArr
+    }
+
+    const handelDelete =(data)=>{
+        let temp = {...myOrders}
+        if(data.count > 1){
+            temp[data.id].count = temp[data.id].count - 1
+        }
+        else{
+            delete temp[data.id]
+        }
+        setMyOrders(temp)
+    }
+
+    const calculateTotal =(myOrders)=>{
+        let x = objectToArray(myOrders)
+        let total = 0
+        for(let i=0; i<x.length; i++){
+            total = total + x[i].count * parseInt(x[i].cost)
+        }
+        return total
+    }
+
+    const handelSubmitOrder =(myOrders)=>{
+        if(calculateTotal(myOrders) > 0){
+        if(!isHome){
+            alert('your order has been placed. Thank You.')
+        }
+        else{
+            if(name !== '' && number !== '' && address !== ''){
+                alert('your order has been placed. Thank You.')
+            }
+            else{
+                alert('Please fill the required info properly')
+            }
+        }
+    }
+    else{
+        alert('Please add dish to your order list') 
+    }
+    }
+
 
 
     return (
@@ -81,10 +145,35 @@ const Menu = () => {
             })}
 
             <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', flexDirection:'column', alignItems:'center' }}>
 
-                    <button onClick={() => setIsModalVisible(false)}>Close</button>
-                     
+                    <button onClick={() => setIsModalVisible(false)} style={{width:100}}>Close</button>
+                    <div style={{width:'50%'}}>
+                    {objectToArray(myOrders).map((item,index)=>{
+                        return (
+                            <div style={{display:'flex', flexDirection:'row',margin:'10px, 10px, 0, 10px', color:'#FFF', justifyContent:'space-between'}}>
+                                <h5>{item.name}</h5>
+                                <h5>{item.count}</h5>
+                                <h5>{parseInt(item.cost)*item.count}</h5>
+                                <button onClick={()=>handelDelete(item)}>Delete</button>
+                                </div>
+                        )
+                    })}
+
+                    <h4 style={{color:'#FFF'}}>Total: {calculateTotal(myOrders)}</h4>
+
+                    {isHome && <div style={{marginTop:20, color:'#FFF'}}>
+                        <h4>Please provide required info</h4>
+                        <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)}/>
+                        <br/>
+                        <input type='text' placeholder='Address' style={{width:'100%'}}  value={address} onChange={(e) => setAddress(e.target.value)}/>
+                        <br/>
+                        <input type='text' placeholder='Contact no'  value={number} onChange={(e) => setNumber(e.target.value)}/>
+                    </div>}
+
+                    <button style={{marginTop:50}} onClick={()=>handelSubmitOrder(myOrders)}>Place order</button>
+
+                     </div>
                 </div>
             </div>
 

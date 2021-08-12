@@ -1,16 +1,22 @@
 import React from 'react'
-
-// function Home(){
-
-// }
-const Delivery =()=>{
-
-    return (
-        <div>
-            <h1>Delivery page</h1>
-        </div>
-    )
-
+import BarcodeScannerComponent from "react-webcam-barcode-scanner";
+ 
+const Delivery =()=>{ 
+  const [ data, setData ] = React.useState('Not Found');
+ 
+  return (
+    <>
+      <BarcodeScannerComponent
+        width={500}
+        height={500}
+        onUpdate={(err, result) => {
+          if (result) setData(result.text)
+          else setData('Not Found')
+        }}
+      />
+      <p>{data}</p>
+    </>
+  )
 }
 
 export default Delivery
