@@ -9,8 +9,9 @@ const Home =()=>{
     const handleData =(data)=>{
         console.log('handleData', data)
         setData(data.text)
-
+        window.push('/menu?q=table&no='+data.text)
     }
+    
     return (
         <div>
             <h1>Home page</h1>
