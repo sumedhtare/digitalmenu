@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
 import './dashboard.css';
+import QRCode from "react-qr-code";
 
 
 import { Link } from 'react-router-dom';
@@ -39,6 +40,8 @@ const Dashboard = () => {
     const [menulist, setMenulist] = useState([])
     const [menuType, setMenuType] = useState(initMenuType[0].value)
     const [dishType, setDishType] = useState(initDishType[0].value)
+    const [tableNo, setTableNo] = useState('')
+
     useEffect(() => {
         firebase.database().ref('menu/').on('value', (snapshot) => {
             let databaseVal = snapshot.val();
@@ -87,44 +90,59 @@ const Dashboard = () => {
             })
     }
 
+    const handlePrint = (id) => {
+      window.print()
+      return false
+      };
+
     return <div class="container" >
         <div>
             <h2 class="title">DashBoard</h2>
         </div>
-        <div class="container responsive">    
-                <div class="col-12 padding margin border-box">
-                    <div class="col-4">
-                        <label for="Name">Dish Name: </label>
-                        <input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} />
-                    </div>
-                    <div class="col-3">
-                        <label for="Name">Enter Price: </label>
-                        <input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} />
-                    </div>
-                    <div class="col-2">
-                        <label for="Menu Type" >Select MenuType: </label>
-                        <select onChange={(e) => setMenuType(e.target.value)}>
-                            {initMenuType.map((item, index) => {
-                                return <option value={item.value}>{item.text}</option>
 
-                            })}
-                        </select>
-                    </div>
-                    <div class="col-2">
-                        <label for="Dish Type" >DishType: </label>
-                        <select onChange={(e) => setDishType(e.target.value)}>
-                            {initDishType.map((item, index) => {
-                                return <option value={item.value}>{item.text}</option>
-
-                            })}
-                        </select>
-                    </div>
-                    <div class="col-1">
-                        <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button>
-                    </div>
-                </div>
+        <div style={{ marginTop: 20 }}>
+            {/* <iframe id="receipt" title="Receipt" > */}
+                <QRCode value={tableNo} />
+            {/* </iframe> */}
+            <br />
+            <input type='text' placeholder='Enter table no' value={tableNo} onChange={(e) => setTableNo(e.target.value)} />
+            <button onClick={()=>handlePrint('receipt')}>Print</button>
         </div>
-        
+
+        <div class="container responsive">
+            <div class="col-12 padding margin border-box">
+                <div class="col-4">
+                    <label for="Name">Dish Name: </label>
+                    <input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} />
+                </div>
+                <div class="col-3">
+                    <label for="Name">Enter Price: </label>
+                    <input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} />
+                </div>
+                <div class="col-2">
+                    <label for="Menu Type" >Select MenuType: </label>
+                    <select onChange={(e) => setMenuType(e.target.value)}>
+                        {initMenuType.map((item, index) => {
+                            return <option value={item.value}>{item.text}</option>
+
+                        })}
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label for="Dish Type" >DishType: </label>
+                    <select onChange={(e) => setDishType(e.target.value)}>
+                        {initDishType.map((item, index) => {
+                            return <option value={item.value}>{item.text}</option>
+
+                        })}
+                    </select>
+                </div>
+                <div class="col-1">
+                    <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button>
+                </div>
+            </div>
+        </div>
+
         <div class="container responsive">
             <div class="row">
                 <div class="container col-12">
