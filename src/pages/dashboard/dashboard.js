@@ -3,8 +3,6 @@ import firebase from "firebase/app";
 import "firebase/database";
 import './dashboard.css';
 import QRCode from "react-qr-code";
-
-
 import { Link } from 'react-router-dom';
 
 const initMenuType = [
@@ -41,7 +39,6 @@ const Dashboard = () => {
     const [menuType, setMenuType] = useState(initMenuType[0].value)
     const [dishType, setDishType] = useState(initDishType[0].value)
     const [tableNo, setTableNo] = useState('')
-
     useEffect(() => {
         firebase.database().ref('menu/').on('value', (snapshot) => {
             let databaseVal = snapshot.val();
