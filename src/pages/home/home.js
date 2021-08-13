@@ -11,7 +11,7 @@ const Home =()=>{
     const handleData =(data)=>{
         console.log('handleData', data)
         setData(data.text)
-        history.push('/menu?q=table&no=1')
+        history.push('/menu?q=table&no='+data.text)
     }
 
     return (

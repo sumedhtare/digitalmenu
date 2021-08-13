@@ -44,12 +44,30 @@ const Menu = () => {
             }
         })
 
-        console.log('dishType', window)
-        if(window.location.search.includes('q=home')){
+        // console.log('dishType', x.q)
+        let x = qryStrToObj();
+        if(x.q === 'home'){
             setIsHome(true)
+        }
+        else{
+            setIsHome(false)
+
         }
 
     }, [])
+
+    const qryStrToObj=()=>{
+        let str = window.location.search.substring(1)
+       let qryParams = str.split('&')
+       let obj ={}
+       for(let i=0; i<qryParams.length; i++){
+           let key = qryParams[i].split('=')[0]
+           let val = qryParams[i].split('=')[1]
+           obj[key] = val
+       }
+       return obj
+    }
+   
 
     const handelAdd = (data, myOrders) => {
         let temp = {...myOrders}
@@ -94,14 +112,34 @@ const Menu = () => {
         return total
     }
 
+    const sendOrderFromTable=(myOrders)=>{
+        let x = qryStrToObj();
+        firebase.database().ref('orders/table').update({
+            [x.no]:myOrders
+        })
+        .then(res =>{
+            alert('your order has been placed. Thank You.')
+        })
+    }
+
+    const sendOrderFromHome=(myOrders)=>{
+        let tempObj ={...myOrders}
+        tempObj.customer = {name,address,number}
+        firebase.database().ref('orders/home').push(tempObj)
+        .then(res =>{
+            alert('your order has been placed. Thank You.')
+        })
+    }
+    
     const handelSubmitOrder =(myOrders)=>{
         if(calculateTotal(myOrders) > 0){
         if(!isHome){
-            alert('your order has been placed. Thank You.')
+            sendOrderFromTable(myOrders)
         }
         else{
             if(name !== '' && number !== '' && address !== ''){
-                alert('your order has been placed. Thank You.')
+                // alert('your order has been placed. Thank You.')
+                sendOrderFromHome(myOrders)
             }
             else{
                 alert('Please fill the required info properly')

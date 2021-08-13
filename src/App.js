@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Home from './pages/home/home';
 import About from './pages/about/about'
-import Delivery from './pages/delivery/delivery';
+import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
 
@@ -89,8 +89,8 @@ useEffect(()=>{
       <Dashboard />
     </Route>
 
-    <Route path="/delivery">
-      <Delivery />
+    <Route path="/kitchen">
+      <Kitchen />
     </Route>
 
     <Route path="/">
