@@ -12,6 +12,8 @@ import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
+import Header from './components/Header';
+import { makeStyles } from '@material-ui/core/styles';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBRKL2yLsocLgIN22WzeZpnDhAZuugxFi8",
@@ -24,10 +26,16 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const useStyles = makeStyles({
+  root: {
+    width: '100%'
+    // backgroundColor: 'red',
+    // color: props => props.color,
+  },
+});
 
-
-function App() {
-
+function App(props) {
+  const classes = useStyles(props);
 const [count, setCount] = useState(0)
 
 useEffect(()=>{
@@ -75,6 +83,8 @@ useEffect(()=>{
 
   {/* A <Switch> looks through its children <Route>s and
       renders the first one that matches the current URL. */}
+      <Header resName={'demo res'}/>
+      
   <Switch>
 
     <Route path="/about">
@@ -86,7 +96,9 @@ useEffect(()=>{
     </Route>
 
     <Route path="/dashboard">
+      <div className={classes.root}>
       <Dashboard />
+      </div>
     </Route>
 
     <Route path="/kitchen">
