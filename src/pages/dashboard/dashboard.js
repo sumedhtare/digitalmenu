@@ -142,7 +142,7 @@ const Dashboard = () => {
 
         <div class="container responsive">
             <div class="row">
-                <div class="container col-12">
+                <div class="col-12">
                     <div class="col-4">
                         <span>Name</span>
                     </div>
