@@ -166,8 +166,9 @@ const Menu = () => {
                             return (
                                 <div>
                                     <h3>{menu}</h3>
+                                    <div style={{display:'flex', flexWrap:'wrap'}}>
                                     {menulist[dish][menu].map((item, index) => {
-                                        return (<div style={{ display: 'flex', flexDirection: 'row', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly' }}>
+                                        return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width:'300px' }}>
                                             <p style={{ backgroundColor: 'red' }}>name: {item.name}</p>
                                             <p>cost: Rs.{item.cost}</p>
                                             <p>Dish Type: {item.dishType}</p>
@@ -175,6 +176,7 @@ const Menu = () => {
                                             <button onClick={() => handelAdd(item, myOrders)}>Add</button>
                                         </div>)
                                     })}
+                                    </div>
                                 </div>
                             )
                         })}

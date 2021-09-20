@@ -10,6 +10,7 @@ const Kitchen = () => {
   useEffect(() => {
     firebase.database().ref('orders/').on('value', (snapshot) => {
       let databaseVal = snapshot.val();
+      console.log('databaseVal',databaseVal)
       let tempData = { ...data }
       if (databaseVal.table != undefined) {
         let tables = Object.keys(databaseVal.table);
@@ -63,9 +64,20 @@ export default Kitchen
 
 const DeliveryModal = ({ item }) => {
   const [showDetails, setShowDetails] = useState(false)
+  
   const handleClick = () => {
     setShowDetails(!showDetails)
   }
+
+  const handleDelete=(id)=>{
+    firebase.database().ref('orders/home').update({
+        [id]:null
+    })
+    .then(res =>{
+        alert('your order has been cleared')
+    })
+}
+
   return <ModalContainer onClick={handleClick}>
     <FormText placeholder={'ID'} text={item.id} />
     <FormText placeholder={'From'} text={item.customer.name} noWrap />
@@ -76,16 +88,27 @@ const DeliveryModal = ({ item }) => {
       {objToArr(item).map((item,index)=>{
         return <FormText placeholder={index + 1} text={`${item.name} x ${item.count}`} />
       })}
-      <Button variant="contained" size='small' color='primary' onClick={()=>console.log('ID',item.id)}>Completed</Button>
+      <Button variant="contained" size='small' color='primary' onClick={()=>handleDelete(item.id)}>Completed</Button>
     </div>}
   </ModalContainer>
 }
 
 const TableModal = ({ item }) => {
   const [showDetails, setShowDetails] = useState(false)
+
   const handleClick = () => {
     setShowDetails(!showDetails)
   }
+
+  const handleDelete=(id)=>{
+    firebase.database().ref('orders/table').update({
+        [id]:null
+    })
+    .then(res =>{
+        alert('your order has been cleared')
+    })
+}
+
   return <ModalContainer onClick={handleClick}>
     <FormText placeholder={'Table no'} text={item.id} />
     {<div style={{ height: showDetails ? 'auto' : 0, overflow: 'hidden' }}>
@@ -93,7 +116,7 @@ const TableModal = ({ item }) => {
       {objToArr(item).map((item,index)=>{
         return <FormText placeholder={index + 1} text={`${item.name} x ${item.count}`} />
       })}
-      <Button variant="contained" size='small' color='primary' onClick={()=>console.log('ID',item.id)}>Completed</Button>
+      <Button variant="contained" size='small' color='primary' onClick={()=>handleDelete(item.id)}>Completed</Button>
     </div>}
   </ModalContainer>
 }

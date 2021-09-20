@@ -12,6 +12,7 @@ import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
+import Login from './pages/login/login' 
 
 const firebaseConfig = {
   apiKey: "AIzaSyBRKL2yLsocLgIN22WzeZpnDhAZuugxFi8",
@@ -91,6 +92,10 @@ useEffect(()=>{
 
     <Route path="/kitchen">
       <Kitchen />
+    </Route>
+
+    <Route path="/login">
+      <Login />
     </Route>
 
     <Route path="/">
