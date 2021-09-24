@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
 import {
@@ -12,7 +12,7 @@ import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
-import Login from './pages/login/login' 
+import Login from './pages/login/login'
 import Header from './components/Header';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -37,86 +37,44 @@ const useStyles = makeStyles({
 
 function App(props) {
   const classes = useStyles(props);
-const [count, setCount] = useState(0)
 
-useEffect(()=>{
-  let staters = [
-    {
-      name:'',
-      cost:'xx.xx'
-    },
-    {
-      name:'dish2',
-      cost:'xx.xx'
-    }
-  ]
+  return (
+    <Router>
 
-  let x = {
-    starters:staters,
-  
-  }
-  // firebase.database().ref('menu/').set(x)
+      <div>
+        {/* <Header resName={'demo res'} /> */}
 
-  firebase.database().ref('menu/').once('value', (snapshot)=>{
-    let databaseVal = snapshot.val();
-    console.log('databaseVal',databaseVal)
-  })
-},[])
+        <Switch>
 
+          <Route path="/about">
+            <About />
+          </Route>
 
-  return (    
-<Router>
+          <Route path="/menu">
+            <Menu />
+          </Route>
 
-<div>
-  {/* <nav>
-    <ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/about">About</Link>
-      </li>
-      <li>
-        <Link to="/delivery">delivery</Link>
-      </li>
-    </ul>
-  </nav> */}
+          <Route path="/dashboard">
+            <div className={classes.root}>
+              <Dashboard />
+            </div>
+          </Route>
 
-  {/* A <Switch> looks through its children <Route>s and
-      renders the first one that matches the current URL. */}
-      <Header resName={'demo res'}/>
-      
-  <Switch>
+          <Route path="/kitchen">
+            <Kitchen />
+          </Route>
 
-    <Route path="/about">
-      <About />
-    </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
 
-    <Route path="/menu">
-      <Menu />
-    </Route>
+          <Route path="/">
+            <Home />
+          </Route>
 
-    <Route path="/dashboard">
-      <div className={classes.root}>
-      <Dashboard />
+        </Switch>
       </div>
-    </Route>
-
-    <Route path="/kitchen">
-      <Kitchen />
-    </Route>
-
-    <Route path="/login">
-      <Login />
-    </Route>
-
-    <Route path="/">
-      <Home />
-    </Route>
-
-  </Switch>
-</div>
-</Router>
+    </Router>
   );
 }
 
