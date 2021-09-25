@@ -23,6 +23,8 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import Modal from '@mui/material/Modal';
 import Grid from '@mui/material/Grid';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 
 const drawerWidth = 240;
 
@@ -336,10 +338,10 @@ const Menu = () => {
                     </List>
                     <Divider />
                     <List>
-                        {['ABOUT'].map((text, index) => (
+                        {['Dashboard','Kitchen'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon>
-                                    <AnnouncementIcon sx={{ color: '#1976d2 ' }} />
+                                {index % 2 === 0 ? <DashboardCustomizeIcon color=""/> : <RestaurantIcon  sx={{ color:""  }} />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
