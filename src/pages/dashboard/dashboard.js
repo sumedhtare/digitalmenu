@@ -13,7 +13,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 import { TextField } from '@mui/material';
 import Modal from '@mui/material/Modal';
-
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -164,9 +164,20 @@ const Dashboard = () => {
                     >
                         <LogoutIcon sx={{ mt: 3, mb: 2 }} onClick={() => handleLogout()} />
                     </IconButton >
+                   <div style={{display:'flex', justifyContent:'space-between', flexDirection:'row', alignItems:'center', width:'100%'}}>
                     <Typography style={{ textAlign: "center", fontFamily: "nunito" }} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                         DASHBOARD
                     </Typography>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        <RestaurantIcon sx={{ mt: 3, mb: 2 }} onClick={() => history.push('/kitchen')} />
+                    </IconButton >
+                    </div>
                 </Toolbar>
             </AppBar>
         </Box>
