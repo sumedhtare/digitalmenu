@@ -25,6 +25,7 @@ import Modal from '@mui/material/Modal';
 import Grid from '@mui/material/Grid';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -110,6 +111,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const Menu = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const history = useHistory();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -340,7 +342,7 @@ const Menu = () => {
                     <List>
                         {['Dashboard','Kitchen'].map((text, index) => (
                             <ListItem button key={text}>
-                                <ListItemIcon>
+                                <ListItemIcon onClick={()=>history.push(text.toLowerCase())}>
                                 {index % 2 === 0 ? <DashboardCustomizeIcon color=""/> : <RestaurantIcon  sx={{ color:""  }} />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
