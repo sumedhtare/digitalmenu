@@ -7,6 +7,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -249,11 +250,12 @@ const Menu = () => {
 
     return (
        
-            <div>
+        <div>
+         
             <Box sx={{ display: 'flex' }}>
-               
+                 
                 <CssBaseline />
-                <AppBar position="fixed" open={open}>
+                <AppBar  position="fixed" open={open}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -283,6 +285,7 @@ const Menu = () => {
                      
                     </Toolbar>
                 </AppBar>
+                
 
                 <Drawer variant="permanent" open={open}>
                     <DrawerHeader>
@@ -295,7 +298,7 @@ const Menu = () => {
                         {['VEG','NON-VEG'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon>
-                                {index % 2 === 0 ? <RestaurantMenuIcon /> : <RestaurantMenuIcon />}
+                                {index % 2 === 0 ? <RestaurantMenuIcon color="success"/> : <RestaurantMenuIcon sx={{ color: '#b91616 '}} />}
                                   
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
@@ -307,34 +310,39 @@ const Menu = () => {
                         {['ABOUT'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon>
-                                <AnnouncementIcon/>
+                                <AnnouncementIcon sx={{ color: '#1976d2 '}} />
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
                         ))}
                     </List>
                 </Drawer>
-            
-            <div style={{ padding: 15 }}>
+              
+          
+           
+            <div style={{ margin:40}}>
                 {/*<button onClick={() => setIsModalVisible(true)}>View my cart</button>*/}
 
-                <h1>Menu list</h1>
+               { /*<h1>Menu list</h1>*/}
                 {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
                     return (
                         <div>
-                            <h2>{dish}</h2>
+                            <h2 style={{fontFamily:'sora', fontSize:'2rem', textTransform: 'capitalize'}}>{dish}</h2>
+                            <Divider variant="middle" />
                             {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
                                 return (
                                     <div>
                                         <h3>{menu}</h3>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {menulist[dish][menu].map((item, index) => {
-                                                return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px' }}>
-                                                    <p style={{ backgroundColor: 'red' }}>name: {item.name}</p>
-                                                    <p>cost: Rs.{item.cost}</p>
-                                                    <p>Dish Type: {item.dishType}</p>
-                                                    <p>Menu Type: {item.menuType}</p>
-                                                    <button onClick={() => handelAdd(item, myOrders)}>Add</button>
+                                                return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily:'sora'}}>
+                                                    <p><strong>Name:</strong> {item.name}</p>
+                                                    <p><strong>Cost:</strong> Rs.{item.cost}</p>
+                                                    <p><strong>Dish Type: </strong>{item.dishType}</p>
+                                                    <p><strong>Menu Type: </strong>{item.menuType}</p>
+                                                    <Button variant="contained" onClick={() => handelAdd(item, myOrders)}>Add</Button>
+
+                                                  {/*  <button onClick={() => handelAdd(item, myOrders)}>Add</button>*/}
                                                 </div>)
                                             })}
                                         </div>
@@ -345,7 +353,7 @@ const Menu = () => {
                     )
                 })}
 
-                <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 }}>
+                <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 , margin:'100'}}>
                     <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
 
                         <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button>
@@ -381,7 +389,7 @@ const Menu = () => {
             </div>
            
             </Box>
-        </div>
+            </div>
        
     )
 

@@ -2,34 +2,43 @@ import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
-import './dashboard.css';
 import QRCode from "react-qr-code";
-import { Grid, Typography, Button, Paper, Avatar, responsiveFontSizes, MenuIcon, TextField, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Grid, Typography, Button, Paper, Avatar, responsiveFontSizes, FormControlLabel, Checkbox } from '@material-ui/core';
 import { useHistory, Link } from "react-router-dom";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Divider from '@mui/material/Divider';
+import {TextField} from '@mui/material';
+
 
 const initMenuType = [
     {
         value: 'starters',
-        text: 'starters'
+        text: 'Starters'
     },
     {
         value: 'main_course',
-        text: 'main_course'
+        text: 'Main Course'
     },
     {
         value: 'deserts',
-        text: 'deserts'
+        text: 'Deserts'
     }
 ]
 
 const initDishType = [
     {
         value: 'veg',
-        text: 'veg'
+        color: 'green',
+        text: 'Veg'
     },
     {
         value: 'non-veg',
-        text: 'non-veg'
+        color: 'red',
+        text: 'Non-Veg'
     }
 ]
 
@@ -41,23 +50,24 @@ const Dashboard = () => {
     const [menuType, setMenuType] = useState(initMenuType[0].value)
     const [dishType, setDishType] = useState(initDishType[0].value)
     const [tableNo, setTableNo] = useState('')
+    const paperStyle = { width: 250, padding: 30 }
     useEffect(() => {
 
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              var uid = user.uid;
-              if(user.email !== 'admin@gmail.com'){
-                history.push('/login')
-              }
-              // ...
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                var uid = user.uid;
+                if (user.email !== 'admin@gmail.com') {
+                    history.push('/login')
+                }
+                // ...
             } else {
                 history.push('/login')
-              // User is signed out
-              // ...
+                // User is signed out
+                // ...
             }
-          });
+        });
 
         firebase.database().ref('menu/').on('value', (snapshot) => {
             let databaseVal = snapshot.val();
@@ -107,118 +117,94 @@ const Dashboard = () => {
     }
 
     const handlePrint = (id) => {
-      window.print()
-      return false
-      };
+        window.print()
+        return false
+    };
 
-      const handleLogout =()=>{
+    const handleLogout = () => {
         firebase.auth().signOut()
-        .then(res=>{
-            history.push('/login')
-        })
-      }
+            .then(res => {
+                history.push('/login')
+            })
+    }
 
-    return <div class="container" >
+    return <div >
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar /*color="transparent" elevation={0}*/ position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        <LogoutIcon sx={{ mt: 3, mb: 2 }} onClick={() => handleLogout()} />
+                    </IconButton >
+                    <Typography style={{ textAlign: "center", fontFamily: "nunito" }} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        DASHBOARD
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+        </Box>
 
-        <Button color="primary"
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }} onClick={()=>handleLogout()}>Logout</Button>
-        <div>
-            <h2 class="title">DashBoard</h2>
-        </div>
 
         <div style={{ marginTop: 20 }}>
-            {/* <iframe id="receipt" title="Receipt" > */}
-                <QRCode value={tableNo} />
-            {/* </iframe> */}
+
+        <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize'}}>Create QR Code</h2>
+        <input type='text' placeholder='Enter table no' value={tableNo} onChange={(e) => setTableNo(e.target.value)} />
+        < button onClick={() => handlePrint('receipt')}>Print</button>
             <br />
-            <input type='text' placeholder='Enter table no' value={tableNo} onChange={(e) => setTableNo(e.target.value)} />
-            <button onClick={()=>handlePrint('receipt')}>Print</button>
+            <Grid container justifyContent='center' alignItems='center'>
+            {/* <iframe id="receipt" title="Receipt" > */}
+                <Paper elevation={8} style={paperStyle} > <QRCode value={tableNo} /></Paper> 
+            {/* </iframe> */}
+              </Grid>
+        </div>
+        <br />
+        <Divider variant="middle" />
+        <div >
+            <label for="Name">Dish Name: </label>
+            <input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} />
+
+            <label for="Name">Enter Price: </label>
+            <input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} />
+
+            <label for="Menu Type" >Select MenuType: </label>
+            <select onChange={(e) => setMenuType(e.target.value)}>
+                {initMenuType.map((item, index) => {
+                    return <option value={item.value}>{item.text}</option>
+
+                })}
+            </select>
+
+            <label for="Dish Type" >DishType: </label>
+            <select onChange={(e) => setDishType(e.target.value)}>
+                {initDishType.map((item, index) => {
+                    return <option value={item.value}>{item.text}</option>
+
+                })}
+            </select>
+            <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button>
         </div>
 
-        <div class="container responsive">
-            <div class="col-12 padding margin border-box">
-                <div class="col-4">
-                    <label for="Name">Dish Name: </label>
-                    <input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} />
-                </div>
-                <div class="col-3">
-                    <label for="Name">Enter Price: </label>
-                    <input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} />
-                </div>
-                <div class="col-2">
-                    <label for="Menu Type" >Select MenuType: </label>
-                    <select onChange={(e) => setMenuType(e.target.value)}>
-                        {initMenuType.map((item, index) => {
-                            return <option value={item.value}>{item.text}</option>
-
-                        })}
-                    </select>
-                </div>
-                <div class="col-2">
-                    <label for="Dish Type" >DishType: </label>
-                    <select onChange={(e) => setDishType(e.target.value)}>
-                        {initDishType.map((item, index) => {
-                            return <option value={item.value}>{item.text}</option>
-
-                        })}
-                    </select>
-                </div>
-                <div class="col-1">
-                    <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="container responsive">
-            <div class="row">
-                <div class="col-12">
-                    <div class="col-4">
-                        <span>Name</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Cost</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Menu Type</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Dish Type</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Delete</span>
-                    </div>
-                </div>
-            </div>
+        <div >
+            <span>Name</span>
+            <span>Cost</span>
+            <span>Menu Type</span>
+            <span>Dish Type</span>
+            <span>Delete</span>
         </div>
         <br />
 
         {menulist.map((item, index) => {
-            return <div class="container responsive">
-                <div class="row">
-
-                    <div class="col-4">
-                        <span>{item.name}</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Rs.{item.cost}</span>
-                    </div>
-
-
-                    <div class="col-2">
-                        <span>{item.menuType}</span>
-                    </div>
-                    <div class="col-2">
-                        <div class="dish">
-                            <span>{item.dishType}</span>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <button onClick={() => handelDelete(item)}
-                            style={{ backgroundColor: 'transparent', border: 0, fontSize: 25, color: 'red', cursor: 'pointer' }}>X</button>
-                    </div>
-
-                </div>
+            return <div >
+                <span>{item.name}</span>
+                <span>Rs.{item.cost}</span>
+                <span>{item.menuType}</span>
+                <span>{item.dishType}</span>
+                <button onClick={() => handelDelete(item)}
+                    style={{ backgroundColor: 'transparent', border: 0, fontSize: 25, color: 'red', cursor: 'pointer' }}>X</button>
             </div>
 
         })}
