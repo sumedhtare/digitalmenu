@@ -8,13 +8,14 @@ import {
   Link
 } from "react-router-dom";
 import Home from './pages/home/home';
+import {makeStyles} from '@material-ui/core/styles';
 import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
 import Login from './pages/login/login' 
 import Header from './components/Header';
-import { makeStyles } from '@material-ui/core/styles';
+import Front from './pages/frront';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBRKL2yLsocLgIN22WzeZpnDhAZuugxFi8",
@@ -84,7 +85,7 @@ useEffect(()=>{
 
   {/* A <Switch> looks through its children <Route>s and
       renders the first one that matches the current URL. */}
-      <Header resName={'demo res'}/>
+   {/*<Header resName={'demo res'}/>*/}
       
   <Switch>
 
@@ -108,6 +109,10 @@ useEffect(()=>{
 
     <Route path="/login">
       <Login />
+    </Route>
+
+    <Route path="/frront">
+      <Front/>
     </Route>
 
     <Route path="/">

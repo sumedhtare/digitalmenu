@@ -2,6 +2,13 @@ import React ,{useState} from 'react'
 import { Link } from "react-router-dom";
 import BarcodeScannerComponent from "react-webcam-barcode-scanner";
 import { useHistory } from "react-router-dom";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 
 const Home =()=>{
     const [shouldScan, setShouldScan] = useState(false)
@@ -17,11 +24,47 @@ const Home =()=>{
     return (
         <div>
             <h1>Home page</h1>
+     <Card sx={{ maxWidth: 345 }}>
+      <CardMedia
+        component="img"
+        alt="Dine in"
+        height="140"
+        image="/public/assets/sacnner.jpeg"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Scan table
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+        You can dine in by scanning.................
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button onClick={()=>setShouldScan(true)} size="small">Scan Table</Button>
+      </CardActions>
+    </Card>
 
-           <button onClick={()=>setShouldScan(true)}>Scan Table</button>
             <br/>
             <br/>
-            <button onClick={()=>history.push('/menu?q=home')}>HomeDelevery</button>
+            <Card sx={{ maxWidth: 345 }}>
+      <CardMedia
+        component="img"
+        alt="Dine in"
+        height="140"
+        image="/public/assets/sacnner.jpeg"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+         Deliverry
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+        You can order for delivery....................
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button onClick={()=>history.push('/menu?q=home')} size="small">Home Delivery</Button>
+      </CardActions>
+    </Card>
 
             {shouldScan && <div>
              <BarcodeScannerComponent

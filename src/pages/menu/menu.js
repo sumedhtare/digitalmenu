@@ -1,9 +1,104 @@
 import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
+import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import CssBaseline from '@mui/material/CssBaseline';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+
+const drawerWidth = 240;
+
+const openedMixin = (theme) => ({
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        width: `calc(${theme.spacing(9)} + 1px)`,
+    },
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+}));
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
+        ...(open && {
+            ...openedMixin(theme),
+            '& .MuiDrawer-paper': openedMixin(theme),
+        }),
+        ...(!open && {
+            ...closedMixin(theme),
+            '& .MuiDrawer-paper': closedMixin(theme),
+        }),
+    }),
+);
 
 const Menu = () => {
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
 
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
     const [menulist, setMenulist] = useState([])
     const [myOrders, setMyOrders] = useState({})
     const [isModalVisible, setIsModalVisible] = useState(false)
@@ -46,178 +141,248 @@ const Menu = () => {
 
         // console.log('dishType', x.q)
         let x = qryStrToObj();
-        if(x.q === 'home'){
+        if (x.q === 'home') {
             setIsHome(true)
         }
-        else{
+        else {
             setIsHome(false)
 
         }
 
     }, [])
 
-    const qryStrToObj=()=>{
+    const qryStrToObj = () => {
         let str = window.location.search.substring(1)
-       let qryParams = str.split('&')
-       let obj ={}
-       for(let i=0; i<qryParams.length; i++){
-           let key = qryParams[i].split('=')[0]
-           let val = qryParams[i].split('=')[1]
-           obj[key] = val
-       }
-       return obj
+        let qryParams = str.split('&')
+        let obj = {}
+        for (let i = 0; i < qryParams.length; i++) {
+            let key = qryParams[i].split('=')[0]
+            let val = qryParams[i].split('=')[1]
+            obj[key] = val
+        }
+        return obj
     }
-   
+
 
     const handelAdd = (data, myOrders) => {
-        let temp = {...myOrders}
+        let temp = { ...myOrders }
         temp[data.id] = data
-        
-        if(temp[data.id].count === undefined){
+
+        if (temp[data.id].count === undefined) {
             temp[data.id].count = 1
         }
-        else{
+        else {
             temp[data.id].count = temp[data.id].count + 1
         }
-        console.log('temp',temp)
+        console.log('temp', temp)
         setMyOrders(temp)
     }
 
-    const objectToArray=(obj)=>{
+    const objectToArray = (obj) => {
         let x = Object.keys(obj)
         let tempArr = []
-        for(let i=0; i<x.length; i++){
-            tempArr.push(obj[ x[i] ])
+        for (let i = 0; i < x.length; i++) {
+            tempArr.push(obj[x[i]])
         }
         return tempArr
     }
 
-    const handelDelete =(data)=>{
-        let temp = {...myOrders}
-        if(data.count > 1){
+    const handelDelete = (data) => {
+        let temp = { ...myOrders }
+        if (data.count > 1) {
             temp[data.id].count = temp[data.id].count - 1
         }
-        else{
+        else {
             delete temp[data.id]
         }
         setMyOrders(temp)
     }
 
-    const calculateTotal =(myOrders)=>{
+    const calculateTotal = (myOrders) => {
         let x = objectToArray(myOrders)
         let total = 0
-        for(let i=0; i<x.length; i++){
+        for (let i = 0; i < x.length; i++) {
             total = total + x[i].count * parseInt(x[i].cost)
         }
         return total
     }
 
-    const sendOrderFromTable=(myOrders)=>{
+    const sendOrderFromTable = (myOrders) => {
         let x = qryStrToObj();
         firebase.database().ref('orders/table').update({
-            [x.no]:myOrders
+            [x.no]: myOrders
         })
-        .then(res =>{
-            alert('your order has been placed. Thank You.')
-        })
+            .then(res => {
+                alert('your order has been placed. Thank You.')
+            })
     }
 
-    const sendOrderFromHome=(myOrders)=>{
-        let tempObj ={...myOrders}
-        tempObj.customer = {name,address,number}
+    const sendOrderFromHome = (myOrders) => {
+        let tempObj = { ...myOrders }
+        tempObj.customer = { name, address, number }
         firebase.database().ref('orders/home').push(tempObj)
-        .then(res =>{
-            alert('your order has been placed. Thank You.')
-        })
-    }
-    
-    const handelSubmitOrder =(myOrders)=>{
-        if(calculateTotal(myOrders) > 0){
-        if(!isHome){
-            sendOrderFromTable(myOrders)
-        }
-        else{
-            if(name !== '' && number !== '' && address !== ''){
-                // alert('your order has been placed. Thank You.')
-                sendOrderFromHome(myOrders)
-            }
-            else{
-                alert('Please fill the required info properly')
-            }
-        }
-    }
-    else{
-        alert('Please add dish to your order list') 
-    }
+            .then(res => {
+                alert('your order has been placed. Thank You.')
+            })
     }
 
+    const handelSubmitOrder = (myOrders) => {
+        if (calculateTotal(myOrders) > 0) {
+            if (!isHome) {
+                sendOrderFromTable(myOrders)
+            }
+            else {
+                if (name !== '' && number !== '' && address !== '') {
+                    // alert('your order has been placed. Thank You.')
+                    sendOrderFromHome(myOrders)
+                }
+                else {
+                    alert('Please fill the required info properly')
+                }
+            }
+        }
+        else {
+            alert('Please add dish to your order list')
+        }
+    }
 
 
     return (
-        <div style={{ padding: 15 }}>
-            <button onClick={() => setIsModalVisible(true)}>View my cart</button>
+       
+            <div>
+            <Box sx={{ display: 'flex' }}>
+               
+                <CssBaseline />
+                <AppBar position="fixed" open={open}>
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            edge="start"
+                            sx={{
+                                marginRight: '36px',
+                                ...(open && { display: 'none' }),
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography style={{textAlign:"center", fontFamily:"nunito"}} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                           Menu Card
+                        </Typography>
+                     
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <ShoppingCartIcon onClick={() => setIsModalVisible(true)}/>
+                        </IconButton>
+                     
+                    </Toolbar>
+                </AppBar>
 
-            <h1>Menu list</h1>
-            {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
-                return (
-                    <div>
-                        <h2>{dish}</h2>
-                        {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
-                            return (
-                                <div>
-                                    <h3>{menu}</h3>
-                                    <div style={{display:'flex', flexWrap:'wrap'}}>
-                                    {menulist[dish][menu].map((item, index) => {
-                                        return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width:'300px' }}>
-                                            <p style={{ backgroundColor: 'red' }}>name: {item.name}</p>
-                                            <p>cost: Rs.{item.cost}</p>
-                                            <p>Dish Type: {item.dishType}</p>
-                                            <p>Menu Type: {item.menuType}</p>
-                                            <button onClick={() => handelAdd(item, myOrders)}>Add</button>
-                                        </div>)
-                                    })}
+                <Drawer variant="permanent" open={open}>
+                    <DrawerHeader>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        </IconButton>
+                    </DrawerHeader>
+                    <Divider />
+                    <List>
+                        {['VEG','NON-VEG'].map((text, index) => (
+                            <ListItem button key={text}>
+                                <ListItemIcon>
+                                {index % 2 === 0 ? <RestaurantMenuIcon /> : <RestaurantMenuIcon />}
+                                  
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Divider />
+                    <List>
+                        {['ABOUT'].map((text, index) => (
+                            <ListItem button key={text}>
+                                <ListItemIcon>
+                                <AnnouncementIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
+            
+            <div style={{ padding: 15 }}>
+                {/*<button onClick={() => setIsModalVisible(true)}>View my cart</button>*/}
+
+                <h1>Menu list</h1>
+                {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
+                    return (
+                        <div>
+                            <h2>{dish}</h2>
+                            {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
+                                return (
+                                    <div>
+                                        <h3>{menu}</h3>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            {menulist[dish][menu].map((item, index) => {
+                                                return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px' }}>
+                                                    <p style={{ backgroundColor: 'red' }}>name: {item.name}</p>
+                                                    <p>cost: Rs.{item.cost}</p>
+                                                    <p>Dish Type: {item.dishType}</p>
+                                                    <p>Menu Type: {item.menuType}</p>
+                                                    <button onClick={() => handelAdd(item, myOrders)}>Add</button>
+                                                </div>)
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
+                        </div>
+                    )
+                })}
+
+                <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+
+                        <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button>
+                        <div style={{ width: '50%' }}>
+                            {objectToArray(myOrders).map((item, index) => {
+                                return (
+                                    <div style={{ display: 'flex', flexDirection: 'row', margin: '10px, 10px, 0, 10px', color: '#FFF', justifyContent: 'space-between' }}>
+                                        <h5>{item.name}</h5>
+                                        <h5>{item.count}</h5>
+                                        <h5>{parseInt(item.cost) * item.count}</h5>
+                                        <button onClick={() => handelDelete(item)}>Delete</button>
+                                    </div>
+                                )
+                            })}
+
+                            <h4 style={{ color: '#FFF' }}>Total: {calculateTotal(myOrders)}</h4>
+
+                            {isHome && <div style={{ marginTop: 20, color: '#FFF' }}>
+                                <h4>Please provide required info</h4>
+                                <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
+                                <br />
+                                <input type='text' placeholder='Address' style={{ width: '100%' }} value={address} onChange={(e) => setAddress(e.target.value)} />
+                                <br />
+                                <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
+                            </div>}
+
+                            <button style={{ marginTop: 50 }} onClick={() => handelSubmitOrder(myOrders)}>Place order</button>
+
+                        </div>
                     </div>
-                )
-            })}
-
-            <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'center', flexDirection:'column', alignItems:'center' }}>
-
-                    <button onClick={() => setIsModalVisible(false)} style={{width:100}}>Close</button>
-                    <div style={{width:'50%'}}>
-                    {objectToArray(myOrders).map((item,index)=>{
-                        return (
-                            <div style={{display:'flex', flexDirection:'row',margin:'10px, 10px, 0, 10px', color:'#FFF', justifyContent:'space-between'}}>
-                                <h5>{item.name}</h5>
-                                <h5>{item.count}</h5>
-                                <h5>{parseInt(item.cost)*item.count}</h5>
-                                <button onClick={()=>handelDelete(item)}>Delete</button>
-                                </div>
-                        )
-                    })}
-
-                    <h4 style={{color:'#FFF'}}>Total: {calculateTotal(myOrders)}</h4>
-
-                    {isHome && <div style={{marginTop:20, color:'#FFF'}}>
-                        <h4>Please provide required info</h4>
-                        <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)}/>
-                        <br/>
-                        <input type='text' placeholder='Address' style={{width:'100%'}}  value={address} onChange={(e) => setAddress(e.target.value)}/>
-                        <br/>
-                        <input type='text' placeholder='Contact no'  value={number} onChange={(e) => setNumber(e.target.value)}/>
-                    </div>}
-
-                    <button style={{marginTop:50}} onClick={()=>handelSubmitOrder(myOrders)}>Place order</button>
-
-                     </div>
                 </div>
-            </div>
 
+            </div>
+           
+            </Box>
         </div>
+       
     )
 
 }
