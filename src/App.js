@@ -111,7 +111,7 @@ useEffect(()=>{
       <Login />
     </Route>
 
-    <Route path="/frront">
+    <Route path="/front">
       <Front/>
     </Route>
 

@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/auth";
+import { useHistory } from "react-router-dom";
 import { Grid, Typography,Button } from '@material-ui/core';
 import { ModalContainer } from './kitchen.style';
 import {objToArr} from '../../functions/utils'
 const Kitchen = () => {
   const [data, setData] = useState({ home: [], table: [] });
-
+  const history = useHistory()
   useEffect(() => {
+
+    
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        var uid = user.uid;
+        console.log('kitchen',user)
+        if(user.email !== 'kitchen@gmail.com'){
+          history.push('/login')
+        }
+        // ...
+      } else {
+          history.push('/login')
+        // User is signed out
+        // ...
+      }
+    });
+
+
     firebase.database().ref('orders/').on('value', (snapshot) => {
       let databaseVal = snapshot.val();
       console.log('databaseVal',databaseVal)
@@ -37,7 +59,18 @@ const Kitchen = () => {
     })
   }, [])
 
+  const handleLogout =()=>{
+    firebase.auth().signOut()
+    .then(res=>{
+        history.push('/login')
+    })
+  }
+
+
   return (<div style={{ padding: 20 }}>
+    <Button color="primary"
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }} onClick={()=>handleLogout()}>Logout</Button>
     <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
       <h1>Kitchen</h1>
       <h3>Home delivery ({data.home?.length})</h3>

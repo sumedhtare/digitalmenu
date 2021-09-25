@@ -8,8 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-
+import Front from '../frront'
 const Home =()=>{
     const [shouldScan, setShouldScan] = useState(false)
     const [ data, setData ] = React.useState('Not Found');
@@ -23,13 +22,15 @@ const Home =()=>{
 
     return (
         <div>
-            <h1>Home page</h1>
+           <Front />
+           <div id="place-to-visit" style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', margin:'100px 0 100px 0'}}>
+           {/* <h1>Home page</h1> */}
      <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         component="img"
         alt="Dine in"
         height="140"
-        image="/public/assets/sacnner.jpeg"
+        image="../../assets/scanner.jpeg"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -51,7 +52,7 @@ const Home =()=>{
         component="img"
         alt="Dine in"
         height="140"
-        image="/public/assets/sacnner.jpeg"
+        image="../../assets/scanner.jpeg"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -75,7 +76,8 @@ const Home =()=>{
              }}
            />
            <h3>{data}</h3>
-           </div>}
+           </div>} 
+           </div>
         </div>
     )
 

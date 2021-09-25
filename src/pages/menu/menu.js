@@ -278,7 +278,7 @@ const Menu = () => {
                             aria-label="menu"
                             sx={{ mr: 2 }}
                         >
-                            <ShoppingCartIcon onClick={() => setIsModalVisible(true)}/>
+                            <ShoppingCartIcon onClick={() => setIsModalVisible(!isModalVisible)}/>
                         </IconButton>
                      
                     </Toolbar>

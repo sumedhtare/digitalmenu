@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/auth";
 import './dashboard.css';
 import QRCode from "react-qr-code";
-import { Link } from 'react-router-dom';
+import { Grid, Typography, Button, Paper, Avatar, responsiveFontSizes, MenuIcon, TextField, FormControlLabel, Checkbox } from '@material-ui/core';
+import { useHistory, Link } from "react-router-dom";
 
 const initMenuType = [
     {
@@ -32,7 +34,7 @@ const initDishType = [
 ]
 
 const Dashboard = () => {
-
+    const history = useHistory();
     const [dishname, setDishname] = useState('')
     const [price, setPrice] = useState()
     const [menulist, setMenulist] = useState([])
@@ -40,6 +42,23 @@ const Dashboard = () => {
     const [dishType, setDishType] = useState(initDishType[0].value)
     const [tableNo, setTableNo] = useState('')
     useEffect(() => {
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+              var uid = user.uid;
+              if(user.email !== 'admin@gmail.com'){
+                history.push('/login')
+              }
+              // ...
+            } else {
+                history.push('/login')
+              // User is signed out
+              // ...
+            }
+          });
+
         firebase.database().ref('menu/').on('value', (snapshot) => {
             let databaseVal = snapshot.val();
             let x = []
@@ -92,7 +111,18 @@ const Dashboard = () => {
       return false
       };
 
+      const handleLogout =()=>{
+        firebase.auth().signOut()
+        .then(res=>{
+            history.push('/login')
+        })
+      }
+
     return <div class="container" >
+
+        <Button color="primary"
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }} onClick={()=>handleLogout()}>Logout</Button>
         <div>
             <h2 class="title">DashBoard</h2>
         </div>
