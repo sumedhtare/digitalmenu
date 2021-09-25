@@ -341,7 +341,7 @@ const Menu = () => {
                         {['Dashboard','Kitchen'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon>
-                                {index % 2 === 0 ? <DashboardCustomizeIcon color=""/> : <RestaurantIcon  sx={{ color:""  }} />}
+                                {index % 2 === 0 ? <DashboardCustomizeIcon  color=""/> : <RestaurantIcon  sx={{ color:""  }} />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
