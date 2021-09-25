@@ -11,8 +11,15 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
-import {TextField} from '@mui/material';
+import { TextField } from '@mui/material';
+import Modal from '@mui/material/Modal';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 const initMenuType = [
     {
@@ -42,6 +49,19 @@ const initDishType = [
     }
 ]
 
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
 const Dashboard = () => {
     const history = useHistory();
     const [dishname, setDishname] = useState('')
@@ -50,6 +70,9 @@ const Dashboard = () => {
     const [menuType, setMenuType] = useState(initMenuType[0].value)
     const [dishType, setDishType] = useState(initDishType[0].value)
     const [tableNo, setTableNo] = useState('')
+    const [qrModal, setQRModal] = useState(false)
+    const [addModal, setAddModal] = useState(false)
+
     const paperStyle = { width: 250, padding: 30 }
     useEffect(() => {
 
@@ -149,65 +172,103 @@ const Dashboard = () => {
         </Box>
 
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, display:'flex', justifyContent:'space-around' }}>
 
-        <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize'}}>Create QR Code</h2>
-        <input type='text' placeholder='Enter table no' value={tableNo} onChange={(e) => setTableNo(e.target.value)} />
-        < button onClick={() => handlePrint('receipt')}>Print</button>
-            <br />
-            <Grid container justifyContent='center' alignItems='center'>
-            {/* <iframe id="receipt" title="Receipt" > */}
-                <Paper elevation={8} style={paperStyle} > <QRCode value={tableNo} /></Paper> 
-            {/* </iframe> */}
-              </Grid>
+            <Button variant="contained" onClick={() => setQRModal(true)}>Generate QR code</Button>
+            <Button variant="contained" onClick={() => setAddModal(true)}>Add dish</Button>
+          
         </div>
+
         <br />
         <Divider variant="middle" />
-        <div >
-            <label for="Name">Dish Name: </label>
-            <input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} />
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+          <TableRow>
+        <TableCell >  <span>Name</span></TableCell>
+        <TableCell > <span>Cost</span></TableCell>
+        <TableCell > <span>Menu Type</span></TableCell>
+        <TableCell > <span>Dish Type</span></TableCell>
+        <TableCell > <span>Delete</span></TableCell>
+        </TableRow>
+        </TableHead>
+       
+       
+        <TableBody> 
+        {menulist.map((item, index) => {
+            return  <TableRow
+            key={item.name}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
+                <TableCell  item> <span>{item.name}</span></TableCell >
+                <TableCell  item> <span>Rs.{item.cost}</span></TableCell >
+                <TableCell  item><span>{item.menuType}</span></TableCell >
+                <TableCell  item><span>{item.dishType}</span></TableCell >
+                <TableCell  item> <button onClick={() => handelDelete(item)}
+                    style={{ backgroundColor: 'transparent', border: 0, fontSize: 25, color: 'red', cursor: 'pointer' }}>X</button></TableCell>
+                    </TableRow>
+        
+        })}
+  </TableBody>
+      </Table>
+    </TableContainer>
 
-            <label for="Name">Enter Price: </label>
-            <input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} />
 
-            <label for="Menu Type" >Select MenuType: </label>
-            <select onChange={(e) => setMenuType(e.target.value)}>
+        <Modal
+            open={qrModal}
+            onClose={() => setQRModal(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize' }}>Create QR Code</h2>
+                <input type='text' placeholder='Enter table no' value={tableNo} onChange={(e) => setTableNo(e.target.value)} />
+                < button onClick={() => handlePrint('receipt')}>Print</button>
+                <br />
+                <Grid container justifyContent='center' alignItems='center'>
+                    {/* <iframe id="receipt" title="Receipt" > */}
+                    <Paper elevation={8} style={paperStyle} > <QRCode value={tableNo} /></Paper>
+                    {/* </iframe> */}
+                </Grid>
+            </Box>
+        </Modal>
+
+
+        <Modal
+            open={addModal}
+            onClose={() => setAddModal(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Grid container spacing={2} direction='column'>
+            {/* <div style={{display:'flex', flexDirection:'column'}}> */}
+            <Grid item> <label for="Name">Dish Name: </label></Grid>
+            <Grid item><input type='text' placeholder='Enter Name Here' value={dishname} onChange={(e) => setDishname(e.target.value)} /></Grid>
+
+            <Grid item><label for="Name">Enter Price: </label></Grid>
+            <Grid item><input type='number' placeholder='price' value={price} onChange={(e) => setPrice(e.target.value)} /></Grid>
+
+            <Grid item> <label for="Menu Type" >Select MenuType: </label></Grid>
+            <Grid item><select onChange={(e) => setMenuType(e.target.value)}>
                 {initMenuType.map((item, index) => {
                     return <option value={item.value}>{item.text}</option>
 
                 })}
-            </select>
+            </select></Grid>
 
-            <label for="Dish Type" >DishType: </label>
-            <select onChange={(e) => setDishType(e.target.value)}>
+            <Grid item> <label for="Dish Type" >DishType: </label></Grid>
+            <Grid item><select onChange={(e) => setDishType(e.target.value)}>
                 {initDishType.map((item, index) => {
                     return <option value={item.value}>{item.text}</option>
 
                 })}
-            </select>
-            <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button>
-        </div>
-
-        <div >
-            <span>Name</span>
-            <span>Cost</span>
-            <span>Menu Type</span>
-            <span>Dish Type</span>
-            <span>Delete</span>
-        </div>
-        <br />
-
-        {menulist.map((item, index) => {
-            return <div >
-                <span>{item.name}</span>
-                <span>Rs.{item.cost}</span>
-                <span>{item.menuType}</span>
-                <span>{item.dishType}</span>
-                <button onClick={() => handelDelete(item)}
-                    style={{ backgroundColor: 'transparent', border: 0, fontSize: 25, color: 'red', cursor: 'pointer' }}>X</button>
-            </div>
-
-        })}
+            </select></Grid>
+            <Grid item> <button style={{ backgroundColor: 'green' }} onClick={() => handleAdd()}>Add</button></Grid>
+        {/* </div> */}
+        </Grid>
+            </Box>
+        </Modal>
 
     </div>
 }

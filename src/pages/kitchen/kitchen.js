@@ -18,7 +18,10 @@ const Kitchen = () => {
         // https://firebase.google.com/docs/reference/js/firebase.User
         var uid = user.uid;
         console.log('kitchen',user)
-        if(user.email !== 'kitchen@gmail.com'){
+        if(user.email === 'kitchen@gmail.com' || user.email === 'admin@gmail.com'){
+         console.log('success')
+        }
+        else{
           history.push('/login')
         }
         // ...

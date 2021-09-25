@@ -21,8 +21,24 @@ import ListItemText from '@mui/material/ListItemText';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
+import Modal from '@mui/material/Modal';
+import Grid from '@mui/material/Grid';
 
 const drawerWidth = 240;
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -107,6 +123,7 @@ const Menu = () => {
     const [name, setName] = useState('')
     const [address, setAddress] = useState('')
     const [number, setNumber] = useState('')
+    const [filter, setFilter] = useState('')
 
     useEffect(() => {
         firebase.database().ref('menu/').on('value', (snapshot) => {
@@ -247,15 +264,21 @@ const Menu = () => {
         }
     }
 
+    const capitalizeFirstLetter=(string)=> {
+        let x = string.charAt(0).toUpperCase() + string.slice(1);
+        x = x.replace('_',' ')
+        return x
+      }
+
 
     return (
-       
+
         <div>
-         
+
             <Box sx={{ display: 'flex' }}>
-                 
+
                 <CssBaseline />
-                <AppBar  position="fixed" open={open}>
+                <AppBar position="fixed" open={open}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -269,10 +292,10 @@ const Menu = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography style={{textAlign:"center", fontFamily:"nunito"}} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                           Menu Card
+                        <Typography style={{ textAlign: "center", fontFamily: "nunito" }} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                            Menu Card
                         </Typography>
-                     
+
                         <IconButton
                             size="large"
                             edge="start"
@@ -280,12 +303,12 @@ const Menu = () => {
                             aria-label="menu"
                             sx={{ mr: 2 }}
                         >
-                            <ShoppingCartIcon onClick={() => setIsModalVisible(!isModalVisible)}/>
+                            <ShoppingCartIcon onClick={() => setIsModalVisible(!isModalVisible)} />
                         </IconButton>
-                     
+
                     </Toolbar>
                 </AppBar>
-                
+
 
                 <Drawer variant="permanent" open={open}>
                     <DrawerHeader>
@@ -295,11 +318,17 @@ const Menu = () => {
                     </DrawerHeader>
                     <Divider />
                     <List>
-                        {['VEG','NON-VEG'].map((text, index) => (
-                            <ListItem button key={text}>
+                        {['VEG', 'NON-VEG'].map((text, index) => (
+                            <ListItem button key={text} onClick={() => {
+                                if (filter === text.toLowerCase()) {
+                                    setFilter('')
+                                } else {
+                                    setFilter(text.toLowerCase())
+                                }
+                            }}>
                                 <ListItemIcon>
-                                {index % 2 === 0 ? <RestaurantMenuIcon color="success"/> : <RestaurantMenuIcon sx={{ color: '#b91616 '}} />}
-                                  
+                                    {index % 2 === 0 ? <RestaurantMenuIcon color="success" /> : <RestaurantMenuIcon sx={{ color: '#b91616 ' }} />}
+
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
@@ -310,87 +339,104 @@ const Menu = () => {
                         {['ABOUT'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon>
-                                <AnnouncementIcon sx={{ color: '#1976d2 '}} />
+                                    <AnnouncementIcon sx={{ color: '#1976d2 ' }} />
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
                         ))}
                     </List>
                 </Drawer>
-              
-          
-           
-            <div style={{ margin:40}}>
-                {/*<button onClick={() => setIsModalVisible(true)}>View my cart</button>*/}
 
-               { /*<h1>Menu list</h1>*/}
-                {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
-                    return (
-                        <div>
-                            <h2 style={{fontFamily:'sora', fontSize:'2rem', textTransform: 'capitalize'}}>{dish}</h2>
-                            <Divider variant="middle" />
-                            {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
-                                return (
-                                    <div>
-                                        <h3>{menu}</h3>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                            {menulist[dish][menu].map((item, index) => {
-                                                return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily:'sora'}}>
-                                                    <p><strong>Name:</strong> {item.name}</p>
-                                                    <p><strong>Cost:</strong> Rs.{item.cost}</p>
-                                                    <p><strong>Dish Type: </strong>{item.dishType}</p>
-                                                    <p><strong>Menu Type: </strong>{item.menuType}</p>
-                                                    <Button variant="contained" onClick={() => handelAdd(item, myOrders)}>Add</Button>
 
-                                                  {/*  <button onClick={() => handelAdd(item, myOrders)}>Add</button>*/}
-                                                </div>)
-                                            })}
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    )
-                })}
 
-                <div style={{ display: isModalVisible ? 'block' : 'none', width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0 , margin:'100'}}>
-                    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ margin: 40 }}>
+                    {/*<button onClick={() => setIsModalVisible(true)}>View my cart</button>*/}
 
-                        <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button>
-                        <div style={{ width: '50%' }}>
-                            {objectToArray(myOrders).map((item, index) => {
-                                return (
-                                    <div style={{ display: 'flex', flexDirection: 'row', margin: '10px, 10px, 0, 10px', color: '#FFF', justifyContent: 'space-between' }}>
-                                        <h5>{item.name}</h5>
-                                        <h5>{item.count}</h5>
-                                        <h5>{parseInt(item.cost) * item.count}</h5>
-                                        <button onClick={() => handelDelete(item)}>Delete</button>
-                                    </div>
-                                )
-                            })}
+                    { /*<h1>Menu list</h1>*/}
+                    {Object.keys(menulist).map((dish, dishIndex) => { //['veg','non-veg']
+                        if (filter === dish || filter === '') {
+                            return (
+                                <div>
+                                    <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize', color:dish==='veg'?'green':'red' }}>{dish}</h2>
+                                    <Divider variant="middle" />
+                                    {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
+                                        return (
+                                            <div>
+                                                <h3>{capitalizeFirstLetter(menu) }</h3>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                                    {menulist[dish][menu].map((item, index) => {
+                                                        return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily: 'sora' }}>
+                                                            <p><strong>Name:</strong> {item.name}</p>
+                                                            <p><strong>Cost:</strong> Rs.{item.cost}</p>
+                                                            <p><strong>Dish Type: </strong>{item.dishType}</p>
+                                                            <p><strong>Menu Type: </strong>{item.menuType}</p>
+                                                            <Button variant="contained" onClick={() => handelAdd(item, myOrders)}>Add</Button>
 
-                            <h4 style={{ color: '#FFF' }}>Total: {calculateTotal(myOrders)}</h4>
+                                                            {/*  <button onClick={() => handelAdd(item, myOrders)}>Add</button>*/}
+                                                        </div>)
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )
+                        }
+                    })}
 
-                            {isHome && <div style={{ marginTop: 20, color: '#FFF' }}>
-                                <h4>Please provide required info</h4>
-                                <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
-                                <br />
-                                <input type='text' placeholder='Address' style={{ width: '100%' }} value={address} onChange={(e) => setAddress(e.target.value)} />
-                                <br />
-                                <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
-                            </div>}
+                    {/* </div> */}
 
-                            <button style={{ marginTop: 50 }} onClick={() => handelSubmitOrder(myOrders)}>Place order</button>
-
-                        </div>
-                    </div>
                 </div>
 
-            </div>
-           
             </Box>
-            </div>
-       
+
+
+            <Modal
+  open={isModalVisible}
+  onClose={()=>setIsModalVisible(false)}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+>
+                    {/* <div style={{ display: isModalVisible ? 'block' : 'none', width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0, margin: '100' }}> */}
+                       <Box sx={style}>
+
+                            {/* <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button> */}
+                            <div style={{display:'flex', flexDirection:'column'}}>
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Grid item xs={3}><h5>Dish</h5></Grid>
+                            <Grid item xs={3}><h5>Count</h5></Grid>
+                            <Grid item xs={3}><h5>Cost</h5></Grid>
+                            <Grid item xs={3}><h5>Remove</h5></Grid>
+                                        </div>
+                                {objectToArray(myOrders).map((item, index) => {
+                                    return (
+                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Grid item xs={3}><h5>{item.name}</h5></Grid>
+                                            <Grid item xs={3}><h5>{item.count}</h5></Grid>
+                                            <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
+                                            <Grid item xs={3}><button onClick={() => handelDelete(item)}>Delete</button></Grid>
+                                        </div>
+                                    )
+                                })}
+
+                                <h4 >Total: {calculateTotal(myOrders)}</h4>
+
+                                {isHome && <div style={{ marginTop: 20,  }}>
+                                    <h4>Please provide required info</h4>
+                                    <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
+                                    <br />
+                                    <input type='text' placeholder='Address' style={{ width: '100%' }} value={address} onChange={(e) => setAddress(e.target.value)} />
+                                    <br />
+                                    <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
+                                </div>}
+
+                                <button style={{ marginTop: 50 }} onClick={() => handelSubmitOrder(myOrders)}>Place order</button>
+
+                            </div>
+                        </Box>
+                        </Modal>
+        </div>
+
     )
 
 }
