@@ -20,7 +20,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Modal from '@mui/material/Modal';
 import Grid from '@mui/material/Grid';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -107,7 +107,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         }),
     }),
 );
-
+   
+  
 const Menu = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -322,6 +323,17 @@ const Menu = () => {
                     </DrawerHeader>
                     <Divider />
                     <List>
+                        {['Home Page'].map((text, index) => (
+                            <ListItem button key={text}>
+                                <ListItemIcon onClick={()=>history.push(text.toLowerCase())}>
+                                <ArrowBackIosNewIcon color="primary"/> 
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Divider />
+                    <List>
                         {['VEG', 'NON-VEG'].map((text, index) => (
                             <ListItem button key={text} onClick={() => {
                                 if (filter === text.toLowerCase()) {
@@ -343,7 +355,7 @@ const Menu = () => {
                         {['Dashboard','Kitchen'].map((text, index) => (
                             <ListItem button key={text}>
                                 <ListItemIcon onClick={()=>history.push(text.toLowerCase())}>
-                                {index % 2 === 0 ? <DashboardCustomizeIcon color=""/> : <RestaurantIcon  sx={{ color:""  }} />}
+                                {index % 2 === 0 ? <DashboardCustomizeIcon color="primary"/> : <RestaurantIcon  color="primary" />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>

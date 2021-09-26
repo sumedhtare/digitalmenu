@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import Home from './pages/home/home';
 import {makeStyles} from '@material-ui/core/styles';
-import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
@@ -88,11 +87,6 @@ useEffect(()=>{
    {/*<Header resName={'demo res'}/>*/}
       
   <Switch>
-
-    <Route path="/about">
-      <About />
-    </Route>
-
     <Route path="/menu">
       <Menu />
     </Route>
