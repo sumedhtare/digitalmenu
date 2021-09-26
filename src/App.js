@@ -8,13 +8,14 @@ import {
   Link
 } from "react-router-dom";
 import Home from './pages/home/home';
+import {makeStyles} from '@material-ui/core/styles';
 import About from './pages/about/about'
 import Kitchen from './pages/kitchen/kitchen';
 import Dashboard from './pages/dashboard/dashboard';
 import Menu from './pages/menu/menu'
 import Login from './pages/login/login'
 import Header from './components/Header';
-import { makeStyles } from '@material-ui/core/styles';
+import Front from './pages/frront';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBRKL2yLsocLgIN22WzeZpnDhAZuugxFi8",
