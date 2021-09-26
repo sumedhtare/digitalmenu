@@ -46,10 +46,6 @@ function App(props) {
 
         <Switch>
 
-          <Route path="/about">
-            <About />
-          </Route>
-
           <Route path="/menu">
             <Menu />
           </Route>
