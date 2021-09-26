@@ -37,7 +37,7 @@ const Home =()=>{
           Scan table
         </Typography>
         <Typography variant="body2" color="text.secondary">
-        You can dine in by scanning.................
+        You can dine in by scanning................
         </Typography>
       </CardContent>
       <CardActions>
