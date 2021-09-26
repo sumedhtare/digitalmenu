@@ -44,7 +44,7 @@ const Home = () => {
             component="img"
             alt="Dine in"
             height="140"
-            image={img}
+            image='../../assets/scanner.jpeg'
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -66,7 +66,7 @@ const Home = () => {
             component="img"
             alt="Dine in"
             height="140"
-            image={img}
+            image='../../assets/scanner.jpeg'
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
