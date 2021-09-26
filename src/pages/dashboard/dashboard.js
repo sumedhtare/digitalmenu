@@ -27,9 +27,8 @@ import Menu from '@mui/material/Menu';
 import AppsIcon from '@mui/icons-material/Apps';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuItem from '@mui/material/MenuItem';
-
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-{/*for dashboard menu*/ }
+
 const initMenuType = [
     {
         value: 'starters',

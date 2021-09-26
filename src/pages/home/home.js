@@ -11,7 +11,8 @@ import Typography from '@mui/material/Typography';
 import Front from '../frront'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import img from '../../assets/scanner.jpeg'
+import img from '../../assets/scanner.jpeg';
+import image from '../../assets/delivery.jpeg';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -37,7 +38,7 @@ const Home = () => {
   return (
     <div >
       <Front />
-      <div id="place-to-visit" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '100px 0 100px 0' }}>
+      <div id="place-to-visit" style={{marginTop:'5',display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '100px 0 100px 0' }}>
         {/* <h1>Home page</h1> */}
         <Card sx={{ maxWidth: 345 }}>
           <CardMedia
@@ -51,7 +52,7 @@ const Home = () => {
               Scan table
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              You can dine in by scanning................
+              Hello!! No need to go to the counter. Order your food by scanning the QR code on the table. Have a great day!!
             </Typography>
           </CardContent>
           <CardActions>
@@ -66,14 +67,14 @@ const Home = () => {
             component="img"
             alt="Dine in"
             height="140"
-            image='../../assets/scanner.jpeg'
+            image='../../assets/delivery.jpeg'
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              Deliverry
+              Delivery
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              You can order for delivery....................
+              Hello! For "Home Delivery" click the below button and enjoy the delicious food at your own place. Have a great day!!
             </Typography>
           </CardContent>
           <CardActions>
