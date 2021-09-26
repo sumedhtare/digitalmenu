@@ -430,7 +430,7 @@ const Menu = () => {
                                             <Grid item xs={3}><h5>{item.name}</h5></Grid>
                                             <Grid item xs={3}><h5>{item.count}</h5></Grid>
                                             <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
-                                            <Grid item xs={3}><button onClick={() => handelDelete(item)}>Delete</button></Grid>
+                                            <Grid item xs={3}> <Button variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
                                         </div>
                                     )
                                 })}
@@ -445,9 +445,8 @@ const Menu = () => {
                                     <br />
                                     <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
                                 </div>}
-
-                                <button style={{ marginTop: 50 }} onClick={() => handelSubmitOrder(myOrders)}>Place order</button>
-
+                                <Button style={{ marginTop: 50 }} variant="contained" onClick={() => handelSubmitOrder(myOrders)}>Place Order</Button>
+                                
                             </div>
                         </Box>
                         </Modal>
