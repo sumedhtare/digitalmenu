@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/digitalmenu/static/css/main.6dea0f05.chunk.css",
-    "main.js": "/digitalmenu/static/js/main.bf84d5bb.chunk.js",
-    "main.js.map": "/digitalmenu/static/js/main.bf84d5bb.chunk.js.map",
+    "main.js": "/digitalmenu/static/js/main.e802c07b.chunk.js",
+    "main.js.map": "/digitalmenu/static/js/main.e802c07b.chunk.js.map",
     "runtime-main.js": "/digitalmenu/static/js/runtime-main.5a7ce687.js",
     "runtime-main.js.map": "/digitalmenu/static/js/runtime-main.5a7ce687.js.map",
-    "static/js/2.73bb9e9d.chunk.js": "/digitalmenu/static/js/2.73bb9e9d.chunk.js",
-    "static/js/2.73bb9e9d.chunk.js.map": "/digitalmenu/static/js/2.73bb9e9d.chunk.js.map",
+    "static/js/2.04b0ebf3.chunk.js": "/digitalmenu/static/js/2.04b0ebf3.chunk.js",
+    "static/js/2.04b0ebf3.chunk.js.map": "/digitalmenu/static/js/2.04b0ebf3.chunk.js.map",
     "static/js/3.fde681cc.chunk.js": "/digitalmenu/static/js/3.fde681cc.chunk.js",
     "static/js/3.fde681cc.chunk.js.map": "/digitalmenu/static/js/3.fde681cc.chunk.js.map",
     "index.html": "/digitalmenu/index.html",
     "static/css/main.6dea0f05.chunk.css.map": "/digitalmenu/static/css/main.6dea0f05.chunk.css.map",
-    "static/js/2.73bb9e9d.chunk.js.LICENSE.txt": "/digitalmenu/static/js/2.73bb9e9d.chunk.js.LICENSE.txt"
+    "static/js/2.04b0ebf3.chunk.js.LICENSE.txt": "/digitalmenu/static/js/2.04b0ebf3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.5a7ce687.js",
-    "static/js/2.73bb9e9d.chunk.js",
+    "static/js/2.04b0ebf3.chunk.js",
     "static/css/main.6dea0f05.chunk.css",
-    "static/js/main.bf84d5bb.chunk.js"
+    "static/js/main.e802c07b.chunk.js"
   ]
 }
