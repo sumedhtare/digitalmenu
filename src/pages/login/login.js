@@ -4,7 +4,11 @@ import LockIcon from '@mui/icons-material/Lock';
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useHistory } from "react-router-dom";
-
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
 const Login = () => {
   const history = useHistory();
   const paperStyle = { width: 400, padding: 20 }
@@ -30,6 +34,8 @@ const Login = () => {
         const errorMessage = error.message;
       });
   }
+
+
   return (<div style={{
     height: '100vh',
     display: 'flex',
@@ -37,7 +43,24 @@ const Login = () => {
     backgroundSize: 'cover',
     backgroundImage: `url("https://images.pexels.com/photos/1819669/pexels-photo-1819669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")`
   }}>
-    <Grid container justifyContent='center' alignItems='center'>
+   
+    <Box  sx={{ flexGrow: 1 }}>
+      <AppBar color="transparent" position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <HomeIcon sx={{ fontSize: 40 }} onClick={() => history.push('/home')} color="primary" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </Box>
+
+    <Grid  container justifyContent='center' alignItems='center'>
 
       <Paper elevation={20} style={paperStyle} >
         <Grid align="center">
