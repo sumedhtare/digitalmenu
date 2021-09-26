@@ -324,8 +324,8 @@ const Menu = () => {
                     <Divider />
                     <List>
                         {['Home Page'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon onClick={()=>history.push(text.toLowerCase())}>
+                            <ListItem button key={text}  onClick={()=>history.push(text.toLowerCase())}>
+                                <ListItemIcon >
                                 <ArrowBackIosNewIcon color="primary"/> 
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
@@ -353,8 +353,8 @@ const Menu = () => {
                     <Divider />
                     <List>
                         {['Dashboard','Kitchen'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon onClick={()=>history.push(text.toLowerCase())}>
+                            <ListItem button key={text} onClick={()=>history.push(text.toLowerCase())}>
+                                <ListItemIcon >
                                 {index % 2 === 0 ? <DashboardCustomizeIcon color="primary"/> : <RestaurantIcon  color="primary" />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
