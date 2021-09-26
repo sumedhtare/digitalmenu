@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Switch,
   Route,
   Link
@@ -39,7 +39,7 @@ function App(props) {
   const classes = useStyles(props);
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
 
       <div>
         {/* <Header resName={'demo res'} /> */}

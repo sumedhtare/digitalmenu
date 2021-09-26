@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Front from '../frront'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { Grid } from '@material-ui/core';
 import img from '../../assets/scanner.jpeg';
 import image from '../../assets/delivery.jpeg';
 const style = {
@@ -38,9 +39,11 @@ const Home = () => {
   return (
     <div >
       <Front />
-      <div id="place-to-visit" style={{marginTop:'5',display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '100px 0 100px 0' }}>
+      <div id="place-to-visit" style={{margin:'20px 0 20px 0'}}>
+        <Grid container spacing={2}  justifyContent='center' alignItems='center'>
         {/* <h1>Home page</h1> */}
-        <Card sx={{ maxWidth: 345 }}>
+        <Grid item xs={12} sm={6} md={4} justifyContent='center' style={{display:'flex'}}>
+        <Card >
           <CardMedia
             component="img"
             alt="Dine in"
@@ -59,10 +62,10 @@ const Home = () => {
             <Button onClick={() => setShouldScan(true)} size="small">Scan Table</Button>
           </CardActions>
         </Card>
-
-        <br />
-        <br />
-        <Card sx={{ maxWidth: 345 }}>
+        </Grid>
+       
+        <Grid item xs={12} md={4} sm={6} justifyContent='center' style={{display:'flex'}}>
+        <Card >
           <CardMedia
             component="img"
             alt="Dine in"
@@ -81,7 +84,8 @@ const Home = () => {
             <Button onClick={() => history.push('/menu?q=home')} size="small">Home Delivery</Button>
           </CardActions>
         </Card>
-
+        </Grid>
+        </Grid>
       </div>
 
       <Modal
