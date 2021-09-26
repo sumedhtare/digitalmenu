@@ -26,16 +26,18 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: 'none',
         fontFamily: "Nunito",
     },
-   
+    icon: {
+        color: 'black',
+        fontSize: "15rem",
+
+    },
     appbarTitle: {
-        fontSize:"1.5rem",
-        color: "#f62626",
-       
-     
+        flexGrow: "1",
+        color: "#fff",
     },
     container: {
         textAlign: 'center',
-        fontSize: "2rem"
+        fontSize: "2.5rem"
     },
 
     appbarWrapper: {
@@ -50,10 +52,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "4rem",
 
     },
-    title:{
-        flexGrow: "1",
-        color: "#fff",
-    },
 
 
 
@@ -67,7 +65,7 @@ export default function Front() {
             <div className={classes.main}>
                 <AppBar color="transparent" className={classes.appbar} elevation={0}>
                     <Toolbar className={classes.appbarWrapper}>
-                        <h1 className={classes.appbarTitle}>Dine In.</h1>
+                        <h1 className={classes.appbarTitle}>Dine <span className={classes.colorText}>In.</span></h1>
                         {/* <IconButton>
                             <SortIcon className={classes.icon} />
                         </IconButton> */}
@@ -76,7 +74,7 @@ export default function Front() {
                 <Collapse in={true} {...(true ? { timeout: 1000 } : {})} collapsedHeight={50}>
                     <div className={classes.container}>
                         <h1 style={{ textAlign: "center" }}>
-                            <span className={classes.title}> Welcome to <br />DINE </span><span className={classes.colorText}> In.</span>
+                            <span className={classes.appbarTitle}> Welcome to <br />DINE </span><span className={classes.colorText}> In.</span>
                         </h1>
                         <Scroll to="place-to-visit" smooth={true}>
                             <IconButton >
