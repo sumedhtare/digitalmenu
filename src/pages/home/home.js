@@ -37,9 +37,11 @@ const Home = () => {
   }
 
   return (
-    <div >
+    <div style={{backgroundImage: `url(${process.env.PUBLIC_URL + "/assets/frontback.jpeg"})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'}} >
       <Front />
-      <div id="place-to-visit" style={{margin:'20px 0 20px 0'}}>
+      <div id="place-to-visit" style={{padding:'20px 0 20px 0'}}>
         <Grid container spacing={2}  justifyContent='center' alignItems='center'>
         {/* <h1>Home page</h1> */}
         <Grid item xs={12} sm={6} md={4} justifyContent='center' style={{display:'flex'}}>

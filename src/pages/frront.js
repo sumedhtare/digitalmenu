@@ -9,9 +9,6 @@ import { Link as Scroll } from 'react-scroll';
 const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100vh',
-        backgroundImage: `url(${process.env.PUBLIC_URL + "/assets/frontback.jpeg"})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
     },
     main: {
         display: 'flex',
