@@ -26,22 +26,24 @@ import Grid from '@mui/material/Grid';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import { useHistory } from "react-router-dom";
+import styledComp from 'styled-components';
 
 const drawerWidth = 240;
 
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
+const Cart = styledComp.div`
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 500px;
+background-color: #fff;
+border: 2px solid #000;
+box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+padding: 32px;
+@media screen and (max-width: 1024px) {
+    width: 300px;
+   }
+`
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -107,8 +109,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         }),
     }),
 );
-   
-  
+
+
 const Menu = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -237,6 +239,8 @@ const Menu = () => {
         })
             .then(res => {
                 alert('your order has been placed. Thank You.')
+                setIsModalVisible(false)
+                setMyOrders({})
             })
     }
 
@@ -245,8 +249,32 @@ const Menu = () => {
         tempObj.customer = { name, address, number }
         firebase.database().ref('orders/home').push(tempObj)
             .then(res => {
+
                 alert('your order has been placed. Thank You.')
+                setName('');
+                setAddress('');
+                setNumber('');
+                setIsModalVisible(false)
+                setMyOrders({})
             })
+    }
+
+    const containsText = (text) => { //"sumedh"
+        text = text.split('') //['s'.'u','m',....]
+        for (let i = 0; i < text.length; i++) {
+            if (!isNaN(text[i])) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const checkValidNumber = (text) => {
+        if (isNaN(text)) return false
+        text = text.split('')
+        console.log('text', text)
+        if (text.length === 10) return true
+        return false
     }
 
     const handelSubmitOrder = (myOrders) => {
@@ -257,7 +285,15 @@ const Menu = () => {
             else {
                 if (name !== '' && number !== '' && address !== '') {
                     // alert('your order has been placed. Thank You.')
-                    sendOrderFromHome(myOrders)
+                    if (containsText(name)) {
+                        alert('name cannot contain number')
+                    }
+                    else if (!checkValidNumber(number)) {
+                        alert('invalid number')
+                    }
+                    else {
+                        sendOrderFromHome(myOrders)
+                    }
                 }
                 else {
                     alert('Please fill the required info properly')
@@ -269,11 +305,11 @@ const Menu = () => {
         }
     }
 
-    const capitalizeFirstLetter=(string)=> {
+    const capitalizeFirstLetter = (string) => {
         let x = string.charAt(0).toUpperCase() + string.slice(1);
-        x = x.replace('_',' ')
+        x = x.replace('_', ' ')
         return x
-      }
+    }
 
 
     return (
@@ -324,9 +360,9 @@ const Menu = () => {
                     <Divider />
                     <List>
                         {['Home Page'].map((text, index) => (
-                            <ListItem button key={text}  onClick={()=>history.push(text.toLowerCase())}>
+                            <ListItem button key={text} onClick={() => history.push(text.toLowerCase())}>
                                 <ListItemIcon >
-                                <ArrowBackIosNewIcon color="primary"/> 
+                                    <ArrowBackIosNewIcon color="primary" />
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
@@ -352,10 +388,10 @@ const Menu = () => {
                     </List>
                     <Divider />
                     <List>
-                        {['Dashboard','Kitchen'].map((text, index) => (
-                            <ListItem button key={text} onClick={()=>history.push(text.toLowerCase())}>
+                        {['Dashboard', 'Kitchen'].map((text, index) => (
+                            <ListItem button key={text} onClick={() => history.push(text.toLowerCase())}>
                                 <ListItemIcon >
-                                {index % 2 === 0 ? <DashboardCustomizeIcon color="primary"/> : <RestaurantIcon  color="primary" />}
+                                    {index % 2 === 0 ? <DashboardCustomizeIcon color="primary" /> : <RestaurantIcon color="primary" />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} />
                             </ListItem>
@@ -373,23 +409,15 @@ const Menu = () => {
                         if (filter === dish || filter === '') {
                             return (
                                 <div>
-                                    <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize', color:dish==='veg'?'green':'red' }}>{dish}</h2>
+                                    <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize', color: dish === 'veg' ? 'green' : 'red' }}>{dish}</h2>
                                     <Divider variant="middle" />
                                     {Object.keys(menulist[dish]).map((menu, menuIndex) => { //[starters, main_course, deserts]
                                         return (
                                             <div>
-                                                <h3>{capitalizeFirstLetter(menu) }</h3>
+                                                <h3>{capitalizeFirstLetter(menu)}</h3>
                                                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                                     {menulist[dish][menu].map((item, index) => {
-                                                        return (<div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily: 'sora' }}>
-                                                            <p><strong>Name:</strong> {item.name}</p>
-                                                            <p><strong>Cost:</strong> Rs.{item.cost}</p>
-                                                            <p><strong>Dish Type: </strong>{item.dishType}</p>
-                                                            <p><strong>Menu Type: </strong>{item.menuType}</p>
-                                                            <Button variant="contained" onClick={() => handelAdd(item, myOrders)}>Add</Button>
-
-                                                            {/*  <button onClick={() => handelAdd(item, myOrders)}>Add</button>*/}
-                                                        </div>)
+                                                        return <RenderMenu item={item} myOrders={myOrders} handelAdd={handelAdd} />
                                                     })}
                                                 </div>
                                             </div>
@@ -408,48 +436,48 @@ const Menu = () => {
 
 
             <Modal
-  open={isModalVisible}
-  onClose={()=>setIsModalVisible(false)}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
->
-                    {/* <div style={{ display: isModalVisible ? 'block' : 'none', width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0, margin: '100' }}> */}
-                       <Box sx={style}>
+                open={isModalVisible}
+                onClose={() => setIsModalVisible(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                {/* <div style={{ display: isModalVisible ? 'block' : 'none', width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.9)', position: 'absolute', top: 0, margin: '100' }}> */}
+                <Cart>
 
-                            {/* <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button> */}
-                            <div style={{display:'flex', flexDirection:'column'}}>
-                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    {/* <button onClick={() => setIsModalVisible(false)} style={{ width: 100 }}>Close</button> */}
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Grid item xs={3}><h5>Dish</h5></Grid>
                             <Grid item xs={3}><h5>Count</h5></Grid>
                             <Grid item xs={3}><h5>Cost</h5></Grid>
                             <Grid item xs={3}><h5>Remove</h5></Grid>
-                                        </div>
-                                {objectToArray(myOrders).map((item, index) => {
-                                    return (
-                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <Grid item xs={3}><h5>{item.name}</h5></Grid>
-                                            <Grid item xs={3}><h5>{item.count}</h5></Grid>
-                                            <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
-                                            <Grid item xs={3}> <Button variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
-                                        </div>
-                                    )
-                                })}
+                        </div>
+                        {objectToArray(myOrders).map((item, index) => {
+                            return (
+                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Grid item xs={3}><h5>{item.name}</h5></Grid>
+                                    <Grid item xs={3}><h5>{item.count}</h5></Grid>
+                                    <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
+                                    <Grid item xs={3}> <Button variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
+                                </div>
+                            )
+                        })}
 
-                                <h4 >Total: {calculateTotal(myOrders)}</h4>
+                        <h4 >Total: {calculateTotal(myOrders)}</h4>
 
-                                {isHome && <div style={{ marginTop: 20,  }}>
-                                    <h4>Please provide required info</h4>
-                                    <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
-                                    <br />
-                                    <input type='text' placeholder='Address' style={{ width: '100%' }} value={address} onChange={(e) => setAddress(e.target.value)} />
-                                    <br />
-                                    <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
-                                </div>}
-                                <Button style={{ marginTop: 50 }} variant="contained" onClick={() => handelSubmitOrder(myOrders)}>Place Order</Button>
-                                
-                            </div>
-                        </Box>
-                        </Modal>
+                        {isHome && <div style={{ marginTop: 20, }}>
+                            <h4>Please provide required info</h4>
+                            <input type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
+                            <br />
+                            <input type='text' placeholder='Address' style={{ width: '100%' }} value={address} onChange={(e) => setAddress(e.target.value)} />
+                            <br />
+                            <input type='text' placeholder='Contact no' value={number} onChange={(e) => setNumber(e.target.value)} />
+                        </div>}
+                        <Button style={{ marginTop: 50 }} variant="contained" onClick={() => handelSubmitOrder(myOrders)}>Place Order</Button>
+
+                    </div>
+                </Cart>
+            </Modal>
         </div>
 
     )
@@ -457,3 +485,29 @@ const Menu = () => {
 }
 
 export default Menu
+
+
+const RenderMenu = ({ item, myOrders, handelAdd }) => {
+    const [imageurl, setImageurl] = useState('')
+    useEffect(()=>{
+        if(item.image !== undefined){
+
+            firebase.storage().ref().child(item.image).getDownloadURL()
+            .then(res=>{
+                console.log('image url', res)
+                setImageurl(res)
+            })
+        }
+    },[item])
+
+    return <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily: 'sora' }}>
+        {imageurl !== '' && <img src={imageurl} alt='no url' style={{width:'100%',borderRadius: 15,}}/>}
+        <p><strong>Name:</strong> {item.name}</p>
+        <p><strong>Cost:</strong> Rs.{item.cost}</p>
+        <p><strong>Dish Type: </strong>{item.dishType}</p>
+        <p><strong>Menu Type: </strong>{item.menuType}</p>
+        <Button variant="contained" onClick={() => handelAdd(item, myOrders)}>Add</Button>
+
+        {/*  <button onClick={() => handelAdd(item, myOrders)}>Add</button>*/}
+    </div>
+}

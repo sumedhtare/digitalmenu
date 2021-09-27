@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/storage";
 import "firebase/auth";
 import QRCode from "react-qr-code";
 import { Grid, Typography, Paper, Avatar, responsiveFontSizes, FormControlLabel, Checkbox } from '@material-ui/core';
@@ -28,6 +29,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 const initMenuType = [
     {
@@ -122,6 +124,7 @@ const Dashboard = () => {
     const [tableNo, setTableNo] = useState('')
     const [qrModal, setQRModal] = useState(false)
     const [addModal, setAddModal] = useState(false)
+    const [imageAsFile, setImageAsFile] = useState('')
 
     const paperStyle = { width: 250, padding: 30 }
     useEffect(() => {
@@ -161,20 +164,30 @@ const Dashboard = () => {
     }, [])
 
     const handleAdd = () => {
-        firebase.database().ref('menu').push({
-            name: dishname,
-            cost: price,
-            dishType: dishType,
-            menuType: menuType
-        })
+        handleFireBaseUpload(`${dishType}-${menuType}-${dishname}`)
             .then(res => {
-                setDishname('')
-                setPrice(0)
-                alert('dish added sucessfully')
+                firebase.database().ref('menu').push({
+                    name: dishname,
+                    cost: price,
+                    dishType: dishType,
+                    menuType: menuType,
+                    image: res
+                })
+                    .then(res => {
+                        setDishname('')
+                        setPrice(0)
+                        alert('dish added sucessfully')
+                    })
+                    .catch(err => {
+
+                    })
             })
             .catch(err => {
 
             })
+
+
+
     }
 
     const handelDelete = (item) => {
@@ -187,6 +200,16 @@ const Dashboard = () => {
             .catch(err => {
 
             })
+
+        // Create a reference to the file to delete
+        let desertRef = firebase.storage().ref().child(item.image);
+
+        // Delete the file
+        desertRef.delete().then(() => {
+            // File deleted successfully
+        }).catch((error) => {
+            // Uh-oh, an error occurred!
+        });
     }
 
     const handlePrint = (id) => {
@@ -210,6 +233,35 @@ const Dashboard = () => {
         setAnchorEl(null);
     };
 
+
+    const Input = styled('input')({
+        display: 'none',
+    });
+
+    const handleImageAsFile = (e) => {
+        const image = e.target.files[0]
+        setImageAsFile(imageFile => (image))
+    }
+
+    const handleFireBaseUpload = (dishname) => {
+        let promise = new Promise((resolve, reject) => {
+            if (imageAsFile === '') {
+                console.error(`not an image, the image file is a ${typeof (imageAsFile)}`)
+                resolve('no image')
+            }
+            else {
+                firebase.storage().ref(`/images/${dishname}/${imageAsFile.name}`).put(imageAsFile)
+                    .then(fireBaseUrl => {
+                        resolve(fireBaseUrl._delegate.ref._location.path_)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            }
+        })
+
+        return promise
+    }
 
     return <div >
         <Box sx={{ flexGrow: 1 }}>
@@ -243,9 +295,9 @@ const Dashboard = () => {
                             onClick={handleClick}
                             endIcon={<KeyboardArrowDownIcon />}
                         >
-                            <AppsIcon sx={{ mt: 3, mb: 2 }} elevation={5}/>
+                            <AppsIcon sx={{ mt: 3, mb: 2 }} elevation={5} />
                         </IconButton>
-                    
+
                         <StyledMenu
                             id="demo-customized-menu"
                             MenuListProps={{
@@ -256,19 +308,19 @@ const Dashboard = () => {
                             onClose={handleClose}
                         >
                             <MenuItem onClick={() => history.push('/kitchen')} disableRipple>
-                                <RestaurantIcon color="primary"/>
+                                <RestaurantIcon color="primary" />
                                 Kitchen
                             </MenuItem>
                             <MenuItem onClick={() => history.push('/menu')} disableRipple>
-                                <MenuBookIcon color="primary"/>
+                                <MenuBookIcon color="primary" />
                                 Menu Page
                             </MenuItem>
-                            <Divider  sx={{ my: 0.5 }} />
-                            <MenuItem onClick={() => history.push('/home')}  disableRipple>
-                                <HomeIcon color="primary"/>
+                            <Divider sx={{ my: 0.5 }} />
+                            <MenuItem onClick={() => history.push('/home')} disableRipple>
+                                <HomeIcon color="primary" />
                                 Home Page
                             </MenuItem>
-                           
+
                         </StyledMenu>
                         {/*...*/}
                     </div>
@@ -289,12 +341,12 @@ const Dashboard = () => {
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
-                    <TableRow style={{backgroundColor:"#1976d2"}}>
-                      <TableCell >  <span style={{fontWeight: "bold", color:"#fff"}}>Name</span></TableCell>
-                        <TableCell > <span style={{fontWeight: "bold", color:"#fff"}}>Cost</span></TableCell>
-                        <TableCell > <span style={{fontWeight: "bold", color:"#fff"}}>Menu Type</span></TableCell>
-                        <TableCell > <span style={{fontWeight: "bold", color:"#fff"}}>Dish Type</span></TableCell>
-                        <TableCell > <span style={{fontWeight: "bold", color:"#fff"}}>Delete</span></TableCell>
+                    <TableRow style={{ backgroundColor: "#1976d2" }}>
+                        <TableCell >  <span style={{ fontWeight: "bold", color: "#fff" }}>Name</span></TableCell>
+                        <TableCell > <span style={{ fontWeight: "bold", color: "#fff" }}>Cost</span></TableCell>
+                        <TableCell > <span style={{ fontWeight: "bold", color: "#fff" }}>Menu Type</span></TableCell>
+                        <TableCell > <span style={{ fontWeight: "bold", color: "#fff" }}>Dish Type</span></TableCell>
+                        <TableCell > <span style={{ fontWeight: "bold", color: "#fff" }}>Delete</span></TableCell>
                     </TableRow>
                 </TableHead>
 
@@ -325,22 +377,22 @@ const Dashboard = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style }  >
-                
+            <Box sx={style}  >
+
                 <h2 style={{ fontFamily: 'sora', fontSize: '2rem', textTransform: 'capitalize' }}>Create QR Code</h2>
-                <div style={{  display: 'flex'}}>
-                <TextField value={tableNo} onChange={(e) => setTableNo(e.target.value)}
-          id="filled-number"
-          label="Table Number"
-          type="number"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="filled"
-        />
-               <Button style={{marginLeft:'1rem'}} variant="contained" onClick={() => handlePrint('receipt')}>Print</Button>
-               </div>
-                <br/>
+                <div style={{ display: 'flex' }}>
+                    <TextField value={tableNo} onChange={(e) => setTableNo(e.target.value)}
+                        id="filled-number"
+                        label="Table Number"
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        variant="filled"
+                    />
+                    <Button style={{ marginLeft: '1rem' }} variant="contained" onClick={() => handlePrint('receipt')}>Print</Button>
+                </div>
+                <br />
                 <br />
                 <Grid container justifyContent='center' alignItems='center'>
                     {/* <iframe id="receipt" title="Receipt" > */}
@@ -364,10 +416,10 @@ const Dashboard = () => {
                     <Grid item><TextField id="filled-basic" label="Dish Name" variant="filled" value={dishname} onChange={(e) => setDishname(e.target.value)} /></Grid>
 
                     <Grid item><label style={{ fontFamily: 'sora', fontSize: '1rem', textTransform: 'capitalize' }} for="Name">Enter Price: </label></Grid>
-                    <Grid item>   <TextField value={price} onChange={(e) => setPrice(e.target.value)} id="filled-number" label="Enter Cost" type="number"InputLabelProps={{shrink: true,}}variant="filled"/></Grid>
+                    <Grid item>   <TextField value={price} onChange={(e) => setPrice(e.target.value)} id="filled-number" label="Enter Cost" type="number" InputLabelProps={{ shrink: true, }} variant="filled" /></Grid>
 
                     <Grid item> <label style={{ fontFamily: 'sora', fontSize: '1rem', textTransform: 'capitalize' }} for="Menu Type" >Select MenuType: </label></Grid>
-                    <Grid item><select style={{width:'20%', height:'3vh'}} onChange={(e) => setMenuType(e.target.value)}>
+                    <Grid item><select style={{ width: '20%', height: '3vh' }} onChange={(e) => setMenuType(e.target.value)}>
                         {initMenuType.map((item, index) => {
                             return <option value={item.value}>{item.text}</option>
 
@@ -375,13 +427,21 @@ const Dashboard = () => {
                     </select></Grid>
 
                     <Grid item> <label for="Dish Type" style={{ fontFamily: 'sora', fontSize: '1rem', textTransform: 'capitalize' }} for="Menu Type">DishType: </label></Grid>
-                    <Grid item><select style={{width:'20%', height:'3vh'}} onChange={(e) => setDishType(e.target.value)}>
+                    <Grid item><select style={{ width: '20%', height: '3vh' }} onChange={(e) => setDishType(e.target.value)}>
                         {initDishType.map((item, index) => {
                             return <option value={item.value}>{item.text}</option>
 
                         })}
                     </select></Grid>
-                    <Grid item> <Button style={{width:'30%'}} variant="contained" onClick={() => handleAdd()}>ADD</Button> </Grid>
+                    <Grid item>
+                        <label htmlFor="icon-button-file">
+                            <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageAsFile} />
+                            <IconButton color="primary" aria-label="upload picture" component="span">
+                                <PhotoCamera />
+                            </IconButton>
+                        </label>
+                    </Grid>
+                    <Grid item> <Button style={{ width: '30%' }} variant="contained" onClick={() => handleAdd()}>ADD</Button> </Grid>
                     {/* </div> */}
                 </Grid>
             </Box>
