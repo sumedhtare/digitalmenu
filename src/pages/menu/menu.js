@@ -458,7 +458,7 @@ const Menu = () => {
                                     <Grid item xs={3}><h5>{item.name}</h5></Grid>
                                     <Grid item xs={3}><h5>{item.count}</h5></Grid>
                                     <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
-                                    <Grid item xs={3}> <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
+                                    <Grid item xs={3}> <IconButton sx={{ color: "red" , fontSize: 30}} variant="contained" onClick={() => handelDelete(item)}><DeleteIcon /></IconButton></Grid>
                                 </div>
                             )
                         })}
