@@ -27,7 +27,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import { useHistory } from "react-router-dom";
 import styledComp from 'styled-components';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 const drawerWidth = 240;
 
 const Cart = styledComp.div`
@@ -458,7 +458,7 @@ const Menu = () => {
                                     <Grid item xs={3}><h5>{item.name}</h5></Grid>
                                     <Grid item xs={3}><h5>{item.count}</h5></Grid>
                                     <Grid item xs={3}><h5>{parseInt(item.cost) * item.count}</h5></Grid>
-                                    <Grid item xs={3}> <Button variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
+                                    <Grid item xs={3}> <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => handelDelete(item)}>Delete</Button></Grid>
                                 </div>
                             )
                         })}
@@ -501,7 +501,7 @@ const RenderMenu = ({ item, myOrders, handelAdd }) => {
     },[item])
 
     return <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid grey', borderRadius: 15, margin: '10px 10px 0 10px', padding: 5, justifyContent: 'space-evenly', width: '300px', fontFamily: 'sora' }}>
-        {imageurl !== '' && <img src={imageurl} alt='no url' style={{width:'100%',borderRadius: 15,}}/>}
+        {imageurl !== '' && <img src={imageurl} alt='no url' style={{width:'100%',height:"50%",borderRadius: 15,}}/>}
         <p><strong>Name:</strong> {item.name}</p>
         <p><strong>Cost:</strong> Rs.{item.cost}</p>
         <p><strong>Dish Type: </strong>{item.dishType}</p>

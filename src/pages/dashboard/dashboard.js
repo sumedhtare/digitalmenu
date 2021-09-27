@@ -30,6 +30,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 
 const initMenuType = [
     {
@@ -158,8 +160,9 @@ const Dashboard = () => {
                 }
                 console.log('databaseVal', x)
 
-                setMenulist(x)
             }
+
+            setMenulist(x)
         })
     }, [])
 
@@ -361,8 +364,10 @@ const Dashboard = () => {
                             <TableCell item> <span>Rs.{item.cost}</span></TableCell >
                             <TableCell item><span>{item.menuType}</span></TableCell >
                             <TableCell item><span>{item.dishType}</span></TableCell >
-                            <TableCell item> <button onClick={() => handelDelete(item)}
-                                style={{ backgroundColor: 'transparent', border: 0, fontSize: 25, color: 'red', cursor: 'pointer' }}>X</button></TableCell>
+                            <TableCell item> <IconButton aria-label="delete" onClick={() => handelDelete(item)}>
+                                <DeleteForeverIcon sx={{ color: "red" , fontSize: 30}}/>
+                            </IconButton>
+                               </TableCell>
                         </TableRow>
 
                     })}
@@ -434,12 +439,14 @@ const Dashboard = () => {
                         })}
                     </select></Grid>
                     <Grid item>
-                        <label htmlFor="icon-button-file">
-                            <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageAsFile} />
-                            <IconButton color="primary" aria-label="upload picture" component="span">
-                                <PhotoCamera />
-                            </IconButton>
+                        <label style={{ fontFamily: 'sora', fontSize: '1rem', textTransform: 'capitalize' }} >Upload photo for dish:   </label>
+                        <label htmlFor="contained-button-file">
+                            <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageAsFile} />
+                            <Button endIcon={<PhotoCamera />} variant="contained" component="span">
+                                Upload
+                            </Button>
                         </label>
+
                     </Grid>
                     <Grid item> <Button style={{ width: '30%' }} variant="contained" onClick={() => handleAdd()}>ADD</Button> </Grid>
                     {/* </div> */}
