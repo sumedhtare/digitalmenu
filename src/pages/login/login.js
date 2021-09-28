@@ -68,7 +68,7 @@ const Login = () => {
           <h1 style={{ fontFamily: "Vollkorn", fontSize: 40 }}>Sign In</h1>
         </Grid>
         <TextField label="Username" placeholder="Enter Username" fullWidth required value={username} onChange={(e) => setUsername(e.target.value)} />
-        <TextField label="Password" placeholder="Password" fullWidth required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <TextField type="password" label="Password" placeholder="Password" fullWidth required value={password} onChange={(e) => setPassword(e.target.value)} />
         <br />
         <br />
 
